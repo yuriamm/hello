@@ -1,5 +1,4 @@
----
-version: '2'
+version: "2"
 services:
   app:
     image: nicbet/phoenix:1.5.7
@@ -12,3 +11,9 @@ services:
       - db
   db:
     image: postgres:10
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
