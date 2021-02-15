@@ -1,14 +1,25 @@
 defmodule HelloWeb.RegistrationController do
+  @moduledoc """
+  This is the registration module. It handles user registration.
+  """
+
   use HelloWeb, :controller
 
   alias Hello.User
   alias Hello.Repo
 
+  @doc """
+  Shows the registration page.
+  """
   def index(conn, _params) do
     changeset = User.changeset(%User{})
     render conn, "index.html", changeset: changeset
   end
 
+  @doc """
+  Registers users. 
+  """
+  @spec create(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def create(conn, %{"user" => user_params}) do
     case create_user(user_params) do
       {:ok, user} ->

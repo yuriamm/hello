@@ -1,13 +1,23 @@
 defmodule HelloWeb.LoginController do
+    @moduledoc """
+    This is the login module. It handles user login.
+    """
     use HelloWeb, :controller
 
     alias Hello.User
     alias Hello.Repo
 
+    @doc """
+    Shows the login page.
+    """
     def index(conn, _params) do
         render conn, "index.html"
     end
 
+    @doc """
+    Handles user login.
+    """
+    @spec create(Plug.Conn.t(), map()) :: Plug.Conn.t()
     def create(conn, %{"session" => session_params}) do
         case login(session_params, Repo) do
             {:ok, user} ->
@@ -22,7 +32,7 @@ defmodule HelloWeb.LoginController do
         end
     end
 
-    def login(params, repo) do
+    defp login(params, repo) do
         user = repo.get_by(User, username: params["username"])
         case authenticate(user, params["password"]) do
             true -> {:ok, user}
@@ -30,13 +40,18 @@ defmodule HelloWeb.LoginController do
         end
     end
 
-    defp authenticate(user, password) do
-        case user do
-            nil -> false
-            _   -> Bcrypt.verify_pass(password, user.encrypted_password)
-        end   
+    defp authenticate(user, password) when is_map(user) and is_binary(password) do
+        Bcrypt.verify_pass(password, user.encrypted_password)   
     end
 
+    defp authenticate(_, _) do
+        {:error, "Incorrect arguments."}
+    end
+    
+    @doc """
+    Returns current user.
+    """
+    @spec get_current_user(Plug.Conn.t()) :: Plug.Conn.t()
     def get_current_user(conn) do
         case conn.assigns[:current_user] do
             nil ->
