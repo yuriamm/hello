@@ -11,13 +11,14 @@ defmodule HelloWeb.RegistrationController do
   @doc """
   Shows the registration page.
   """
+  @spec index(Plug.Conn.t(), any) :: Plug.Conn.t()
   def index(conn, _params) do
     changeset = User.changeset(%User{})
-    render conn, "index.html", changeset: changeset
+    render(conn, "index.html", changeset: changeset)
   end
 
   @doc """
-  Registers users. 
+  Registers users.
   """
   @spec create(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def create(conn, %{"user" => user_params}) do
@@ -27,12 +28,13 @@ defmodule HelloWeb.RegistrationController do
         |> put_session(:current_user, user.id)
         |> put_flash(:info, "Successfully signed up!")
         |> redirect(to: Routes.page_path(conn, :index))
+
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "index.html", changeset: changeset)
     end
   end
 
-  defp create_user(params \\ %{}) do
+  defp create_user(params) do
     %User{}
     |> User.changeset(params)
     |> Repo.insert()

@@ -41,9 +41,8 @@ defmodule HelloWeb do
       unquote(view_helpers())
 
       def current_user(conn) do
-        HelloWeb.LoginController.get_current_user conn
+        Hello.Login.get_current_user(conn)
       end
-
     end
   end
 
