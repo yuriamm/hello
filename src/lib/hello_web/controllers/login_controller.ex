@@ -5,7 +5,6 @@ defmodule HelloWeb.LoginController do
   use HelloWeb, :controller
 
   alias Hello.Login
-  alias Hello.Repo
 
   @doc """
   Shows the login page.
@@ -20,10 +19,10 @@ defmodule HelloWeb.LoginController do
   """
   @spec create(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def create(conn, %{"session" => session_params}) do
-    case Login.login(session_params, Repo) do
+    case Login.login(session_params) do
       {:ok, user} ->
         conn
-        |> put_session(:current_user, user.id)
+        |> put_session(:current_user_id, user.id)
         |> put_flash(:info, "You're logged in!")
         |> redirect(to: Routes.page_path(conn, :index))
 

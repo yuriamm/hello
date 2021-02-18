@@ -1,9 +1,9 @@
-defmodule Hello.User do
+defmodule Hello.Accounts.User do
   use Ecto.Schema
 
   import Ecto.Changeset
 
-  alias Hello.User
+  alias Hello.Repo
 
   @type t() :: %__MODULE__{
           __meta__: Ecto.Schema.Metadata.t(),
@@ -22,7 +22,7 @@ defmodule Hello.User do
   end
 
   @spec changeset(map(), map()) :: Ecto.Changeset.t()
-  def changeset(%User{} = user, params \\ %{}) do
+  def changeset(%__MODULE__{} = user, params \\ %{}) do
     user
     |> cast(params, [:username, :password])
     |> validate_required([:username, :password])

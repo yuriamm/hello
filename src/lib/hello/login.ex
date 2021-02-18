@@ -1,11 +1,16 @@
 defmodule Hello.Login do
-  alias Hello.User
+  alias Hello.Accounts.User
+  alias Hello.Repo
 
-  @spec login(map(), Ecto.Repo.t()) :: {:ok, Ecto.Schema.t() | nil} | :error
-  def login(params, repo) do
-    user = repo.get_by(User, username: params["username"])
+  @doc """
+  Receives user info and do authentication.
+  """
+  @spec login(map()) :: {:ok, User.t() | nil} | :error
+  def login(%{"password" => password, "username" => username}) do
+    user = Repo.get_by(User, username: username)
 
-    case authenticate(user, params["password"]) do
+    #IS IT EVEN POSSIBLE TO PATTERN MATCH WHEN HANDLING ERRORS...
+    case authenticate(user, password) do
       true -> {:ok, user}
       _ -> :error
     end
@@ -17,19 +22,5 @@ defmodule Hello.Login do
 
   defp authenticate(_, _) do
     {:error, "Incorrect arguments."}
-  end
-
-  @doc """
-  Returns current user.
-  """
-  @spec get_current_user(Plug.Conn.t()) :: Plug.Conn.t()
-  def get_current_user(conn) do
-    case conn.assigns[:current_user] do
-      nil ->
-        Plug.Conn.get_session(conn, :current_user)
-
-      current_user ->
-        current_user
-    end
   end
 end

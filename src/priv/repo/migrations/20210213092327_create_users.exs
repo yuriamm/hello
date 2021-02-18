@@ -11,8 +11,4 @@ defmodule Hello.Repo.Migrations.CreateUsers do
 
     create unique_index(:users, [:username])
   end
-
-  def down do
-    drop table("users")
-  end
 end

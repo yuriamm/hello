@@ -5,8 +5,8 @@ defmodule HelloWeb.RegistrationController do
 
   use HelloWeb, :controller
 
-  alias Hello.User
-  alias Hello.Repo
+  alias Hello.Accounts.User
+  alias Hello.Accounts
 
   @doc """
   Shows the registration page.
@@ -22,21 +22,16 @@ defmodule HelloWeb.RegistrationController do
   """
   @spec create(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def create(conn, %{"user" => user_params}) do
-    case create_user(user_params) do
+    case Accounts.create_user(user_params) do
       {:ok, user} ->
         conn
-        |> put_session(:current_user, user.id)
+        |> put_session(:current_user_id, user.id)
+        |> IO.inspect()
         |> put_flash(:info, "Successfully signed up!")
         |> redirect(to: Routes.page_path(conn, :index))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "index.html", changeset: changeset)
     end
-  end
-
-  defp create_user(params) do
-    %User{}
-    |> User.changeset(params)
-    |> Repo.insert()
   end
 end
