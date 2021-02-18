@@ -39,11 +39,6 @@ defmodule HelloWeb do
 
       # Include shared imports and aliases for views
       unquote(view_helpers())
-
-      def current_user(conn) do
-        HelloWeb.LoginController.get_current_user conn
-      end
-
     end
   end
 

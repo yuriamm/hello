@@ -17,14 +17,6 @@ defmodule HelloWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
-    
-    get  "/signup", RegistrationController, :index
-    post "/signup", RegistrationController, :create
-
-    get  "/login", LoginController, :index
-    post "/login", LoginController, :create
-
-    delete "/logout", LogoutController, :delete
   end
 
   # Other scopes may use custom stacks.
