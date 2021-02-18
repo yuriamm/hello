@@ -26,7 +26,6 @@ defmodule HelloWeb.RegistrationController do
       {:ok, user} ->
         conn
         |> put_session(:current_user_id, user.id)
-        |> IO.inspect()
         |> put_flash(:info, "Successfully signed up!")
         |> redirect(to: Routes.page_path(conn, :index))
 
