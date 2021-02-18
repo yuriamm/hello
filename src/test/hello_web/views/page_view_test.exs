@@ -6,7 +6,7 @@ defmodule HelloWeb.PageViewTest do
     password: "password",
     password_confirmation: "password"
   }
-  ##TODO:Write Test for is logged in
+  # TODO:Write Test for is logged in
   test "show logout if logged in", %{conn: conn} do
     content =
       conn
@@ -14,6 +14,6 @@ defmodule HelloWeb.PageViewTest do
       |> get(Routes.page_path(conn, :index))
       |> html_response(200)
 
-      assert content =~ "Logout"
+    assert content =~ "Logout"
   end
 end

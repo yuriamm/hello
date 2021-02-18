@@ -9,7 +9,7 @@ defmodule Hello.Login do
   def login(%{"password" => password, "username" => username}) do
     user = Repo.get_by(User, username: username)
 
-    #IS IT EVEN POSSIBLE TO PATTERN MATCH WHEN HANDLING ERRORS...
+    # IS IT EVEN POSSIBLE TO PATTERN MATCH WHEN HANDLING ERRORS...
     case authenticate(user, password) do
       true -> {:ok, user}
       _ -> :error
