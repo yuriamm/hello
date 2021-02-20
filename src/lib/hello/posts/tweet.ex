@@ -1,6 +1,5 @@
-defmodule Hello.Posts.Tweets do
+defmodule Hello.Posts.Tweet do
   use Ecto.Schema
-
   import Ecto.Changeset
 
   schema "tweets" do
@@ -11,10 +10,9 @@ defmodule Hello.Posts.Tweets do
   end
 
   @spec changeset(map(), map()) :: Ecto.Changeset.t()
-  def changeset(%__MODULE__{} = tweet, params \\ %{}) do
+  def changeset(tweet, attrs) do
     tweet
-    |> cast(params, [:tweet])
-    |> validate_required([:tweet])
-    |> validate_length(:tweet, min: 1, max: 140)
+    |> cast(attrs, [])
+    |> validate_required([])
   end
 end
