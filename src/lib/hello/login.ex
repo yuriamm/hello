@@ -9,18 +9,10 @@ defmodule Hello.Login do
   def login(%{"password" => password, "username" => username}) do
     user = Repo.get_by(User, username: username)
 
-    # IS IT EVEN POSSIBLE TO PATTERN MATCH WHEN HANDLING ERRORS...
-    case authenticate(user, password) do
-      true -> {:ok, user}
-      _ -> :error
+    if Bcrypt.verify_pass(password, user.encrypted_password) do
+      {:ok, user}
+    else
+      {:error, "Error in verifying password."}
     end
-  end
-
-  defp authenticate(user, password) when is_map(user) and is_binary(password) do
-    Bcrypt.verify_pass(password, user.encrypted_password)
-  end
-
-  defp authenticate(_, _) do
-    {:error, "Incorrect arguments."}
   end
 end
