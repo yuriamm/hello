@@ -21,10 +21,10 @@ defmodule HelloWeb.Router do
     get "/signup", RegistrationController, :index
     post "/signup", RegistrationController, :create
 
-    get "/login", LoginController, :index
-    post "/login", LoginController, :create
+    get "/login", SessionController, :index
+    post "/login", SessionController, :create
 
-    delete "/logout", LogoutController, :delete
+    delete "/logout", SessionController, :delete
   end
 
   # Other scopes may use custom stacks.

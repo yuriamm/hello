@@ -3,8 +3,6 @@ defmodule Hello.Accounts.User do
 
   import Ecto.Changeset
 
-  alias Hello.Repo
-
   @type t() :: %__MODULE__{
           __meta__: Ecto.Schema.Metadata.t(),
           username: String.t(),
@@ -37,9 +35,11 @@ defmodule Hello.Accounts.User do
     password = get_change(changeset, :password)
 
     if password do
+      IO.inspect(password)
       encrypted_password = Bcrypt.hash_pwd_salt(password)
       put_change(changeset, :encrypted_password, encrypted_password)
     else
+      # TODO
       changeset
     end
   end
