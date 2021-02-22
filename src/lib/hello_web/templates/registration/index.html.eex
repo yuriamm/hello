@@ -11,7 +11,7 @@
     <%= password_input f, :password, placeholder: "Password" %>
     <%= error_tag f, :password %>
   </div>
-  
+
   <div>
     <label>Confirm Password</label>
     <%= password_input f, :password_confirmation, placeholder: "Confirm Password" %>
