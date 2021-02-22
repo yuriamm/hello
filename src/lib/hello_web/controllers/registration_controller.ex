@@ -13,15 +13,14 @@ defmodule HelloWeb.RegistrationController do
   """
   @spec index(Plug.Conn.t(), any) :: Plug.Conn.t()
   def index(conn, _params) do
-    changeset = User.changeset(%User{})
-    render(conn, "index.html", changeset: changeset)
+    render(conn, "index.html")
   end
 
   @doc """
   Registers users.
   """
   @spec create(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def create(conn, %{"user" => user_params}) do
+  def create(conn, %{} = user_params) do
     case Accounts.create_user(user_params) do
       {:ok, user} ->
         conn

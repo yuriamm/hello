@@ -33,14 +33,7 @@ defmodule Hello.Accounts.User do
 
   defp encrypt_password(changeset) do
     password = get_change(changeset, :password)
-
-    if password do
-      IO.inspect(password)
-      encrypted_password = Bcrypt.hash_pwd_salt(password)
-      put_change(changeset, :encrypted_password, encrypted_password)
-    else
-      # TODO
-      changeset
-    end
+    encrypted_password = Bcrypt.hash_pwd_salt(password)
+    put_change(changeset, :encrypted_password, encrypted_password)
   end
 end
