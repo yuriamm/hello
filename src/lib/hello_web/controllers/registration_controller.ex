@@ -5,7 +5,6 @@ defmodule HelloWeb.RegistrationController do
 
   use HelloWeb, :controller
 
-  alias Hello.Accounts.User
   alias Hello.Accounts
 
   @doc """
@@ -20,7 +19,7 @@ defmodule HelloWeb.RegistrationController do
   Registers users.
   """
   @spec create(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def create(conn, %{} = user_params) do
+  def create(conn, %{"user" => user_params}) do
     case Accounts.create_user(user_params) do
       {:ok, user} ->
         conn

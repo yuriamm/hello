@@ -8,7 +8,7 @@ defmodule HelloWeb.SignupControllerTest do
   }
 
   test "should signup", %{conn: conn} do
-    assert post(conn, Routes.registration_path(conn, :create), %{user: @valid_registration}).status ==
+    assert post(conn, Routes.registration_path(conn, :create), user: @valid_registration).status ==
              302
   end
 end

@@ -7,24 +7,26 @@ defmodule HelloWeb.PageViewTest do
     password_confirmation: "password"
   }
 
-  test "show logout if logged in", %{conn: conn} do
-    content =
-      conn
-      |> post(Routes.registration_path(conn, :create), %{user: @valid_registration})
-      |> get(Routes.page_path(conn, :index))
-      |> html_response(200)
+  describe "index" do
+    test "shows logout if logged in", %{conn: conn} do
+      content =
+        conn
+        |> post(Routes.registration_path(conn, :create), %{user: @valid_registration})
+        |> get(Routes.page_path(conn, :index))
+        |> html_response(200)
 
-    assert content =~ "Logout"
-  end
+      assert content =~ "Logout"
+    end
 
-  test "has expected form fields", %{conn: conn} do
-    content =
-      conn
-      |> get(Routes.page_path(conn, :index))
-      |> html_response(200)
+    test "shows login and registration if not logged in", %{conn: conn} do
+      content =
+        conn
+        |> get(Routes.page_path(conn, :index))
+        |> html_response(200)
 
-    Enum.map(["Login", "Register"], fn item ->
-      assert content =~ item
-    end)
+      Enum.map(["Login", "Register"], fn item ->
+        assert content =~ item
+      end)
+    end
   end
 end

@@ -3,6 +3,9 @@ defmodule Hello.Accounts.User do
 
   import Ecto.Changeset
 
+  @minimum_password_length 6
+  @minimum_username_length 6
+
   @type t() :: %__MODULE__{
           __meta__: Ecto.Schema.Metadata.t(),
           username: String.t(),
@@ -23,16 +26,16 @@ defmodule Hello.Accounts.User do
   def changeset(%__MODULE__{} = user, params \\ %{}) do
     user
     |> cast(params, [:username, :password])
-    |> validate_required([:username, :password])
-    |> validate_length(:password, min: 6)
-    |> validate_length(:username, min: 6)
+    |> put_encrypt_password()
+    |> validate_required([:username, :password, :encrypted_password])
+    |> validate_length(:password, min: @minimum_password_length)
+    |> validate_length(:username, min: @minimum_username_length)
     |> validate_confirmation(:password)
     |> unique_constraint(:username)
-    |> encrypt_password()
   end
 
-  defp encrypt_password(changeset) do
-    password = get_change(changeset, :password)
+  defp put_encrypt_password(changeset) do
+    password = get_change(changeset, :password, "")
     encrypted_password = Bcrypt.hash_pwd_salt(password)
     put_change(changeset, :encrypted_password, encrypted_password)
   end

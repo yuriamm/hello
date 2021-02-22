@@ -12,8 +12,7 @@ defmodule HelloWeb.SessionControllerTest do
 
   setup do
     conn = build_conn()
-    user = %{user: @valid_registration}
-    post(conn, Routes.registration_path(conn, :create), user)
+    post(conn, Routes.registration_path(conn, :create), user: @valid_registration)
     {:ok, conn: conn}
   end
 
