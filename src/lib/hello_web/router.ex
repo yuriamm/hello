@@ -18,8 +18,7 @@ defmodule HelloWeb.Router do
 
     get "/", PageController, :index
 
-    get "/signup", RegistrationController, :index
-    post "/signup", RegistrationController, :create
+    resources "/signup", RegistrationController, only: [:create, :index]
 
     get "/login", SessionController, :index
     post "/login", SessionController, :create
