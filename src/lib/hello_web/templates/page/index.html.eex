@@ -1,6 +1,11 @@
 <section class="phx-hero">
   <h1><%= gettext "Welcome to %{name}!", name: "Phoenix" %></h1>
-  <p>Peace of mind from prototype to production</p>
+  <%= if Hello.Session.is_logged_in(@conn) do %>
+    <div><%= link "Logout", to: Routes.session_path(@conn, :delete), method: :delete %></div>
+  <% else %>
+    <div><%= link "Login", to: Routes.session_path(@conn, :index)%></div>
+    <div><%= link "Register", to: Routes.registration_path(@conn, :index)%></div>
+   <% end %>
 </section>
 
 <section class="row">
