@@ -1,8 +1,0 @@
-<h1>Show Tweet</h1>
-
-<ul>
-
-</ul>
-
-<span><%= link "Edit", to: Routes.tweet_path(@conn, :edit, @tweet) %></span>
-<span><%= link "Back", to: Routes.tweet_path(@conn, :index) %></span>

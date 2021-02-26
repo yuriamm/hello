@@ -1,24 +1,22 @@
 <h1>Listing Tweets</h1>
-
-<table>
-  <thead>
-    <tr>
-
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-<%= for tweet <- @tweets do %>
-    <tr>
-
-      <td>
-        <span><%= link "Show", to: Routes.tweet_path(@conn, :show, tweet) %></span>
-        <span><%= link "Edit", to: Routes.tweet_path(@conn, :edit, tweet) %></span>
-        <span><%= link "Delete", to: Routes.tweet_path(@conn, :delete, tweet), method: :delete, data: [confirm: "Are you sure?"] %></span>
-      </td>
-    </tr>
+<%= if Hello.Session.is_logged_in(@conn) do %>
+<%= form_for @conn, Routes.tweet_path(@conn, :create),[as: :tweet], fn f ->%>
+  <div>
+    <%= text_input f, :tweet %>
+    <%= error_tag f, :tweet %>
+  </div>
+  <div>
+    <%= submit "Tweet" %>
+  </div>
 <% end %>
-  </tbody>
-</table>
-
-<span><%= link "New Tweet", to: Routes.tweet_path(@conn, :new) %></span>
+<% end %>
+<%= for tweet <- @tweets do %>
+  <div>
+  <%= tweet.tweet %>
+  </div>
+   <%= if @user_id === tweet.user_id do %>
+  <span>
+    <%= link "Delete", to: Routes.tweet_path(@conn, :delete, tweet), method: :delete, data: [confirm: "Are you sure?"] %>
+  </span>
+  <% end %>
+<% end %>

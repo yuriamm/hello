@@ -75,6 +75,7 @@ defmodule HelloWeb.TweetControllerTest do
     test "deletes chosen tweet", %{conn: conn, tweet: tweet} do
       conn = delete(conn, Routes.tweet_path(conn, :delete, tweet))
       assert redirected_to(conn) == Routes.tweet_path(conn, :index)
+
       assert_error_sent 404, fn ->
         get(conn, Routes.tweet_path(conn, :show, tweet))
       end

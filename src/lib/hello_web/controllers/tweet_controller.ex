@@ -2,59 +2,47 @@ defmodule HelloWeb.TweetController do
   use HelloWeb, :controller
 
   alias Hello.Posts
-  alias Hello.Posts.Tweet
 
+  @spec index(Plug.Conn.t(), any()) :: Plug.Conn.t()
   def index(conn, _params) do
-    tweets = Posts.list_tweets()
-    render(conn, "index.html", tweets: tweets)
+    tweets = Posts.get_all_tweets()
+    user_id = Plug.Conn.get_session(conn, :current_user_id)
+    render(conn, "index.html", tweets: tweets, user_id: user_id)
   end
 
-  def new(conn, _params) do
-    changeset = Posts.change_tweet(%Tweet{})
-    render(conn, "new.html", changeset: changeset)
-  end
-
-  @spec create(Plug.Conn.t(), map) :: Plug.Conn.t()
+  @spec create(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def create(conn, %{"tweet" => tweet_params}) do
-    case Posts.create_tweet(tweet_params) do
-      {:ok, tweet} ->
+    user_id = Plug.Conn.get_session(conn, :current_user_id)
+
+    case Posts.create_tweet(tweet_params, user_id) do
+      {:ok, _} ->
         conn
-        |> put_flash(:info, "Tweet created successfully.")
-        |> redirect(to: Routes.tweet_path(conn, :show, tweet))
+        |> put_flash(:info, "Tweeted.")
+        |> redirect(to: Routes.tweet_path(conn, :index))
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", changeset: changeset)
+        errors =
+          Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
+            Enum.reduce(opts, msg, fn {key, value}, acc ->
+              String.replace(acc, "%{#{key}}", to_string(value))
+            end)
+          end)
+
+        error_message =
+          errors
+          |> Enum.map(fn {key, errors} -> "#{key}: #{Enum.join(errors, ", ")}" end)
+          |> Enum.join("\n")
+
+        conn
+        |> put_flash(:error, error_message)
+        |> render("index.html")
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    tweet = Posts.get_tweet!(id)
-    render(conn, "show.html", tweet: tweet)
-  end
-
-  def edit(conn, %{"id" => id}) do
-    tweet = Posts.get_tweet!(id)
-    changeset = Posts.change_tweet(tweet)
-    render(conn, "edit.html", tweet: tweet, changeset: changeset)
-  end
-
-  def update(conn, %{"id" => id, "tweet" => tweet_params}) do
-    tweet = Posts.get_tweet!(id)
-
-    case Posts.update_tweet(tweet, tweet_params) do
-      {:ok, tweet} ->
-        conn
-        |> put_flash(:info, "Tweet updated successfully.")
-        |> redirect(to: Routes.tweet_path(conn, :show, tweet))
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "edit.html", tweet: tweet, changeset: changeset)
-    end
-  end
-
+  @spec delete(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def delete(conn, %{"id" => id}) do
     tweet = Posts.get_tweet!(id)
-    {:ok, _tweet} = Posts.delete_tweet(tweet)
+    {:ok, _} = Posts.delete_tweet(tweet)
 
     conn
     |> put_flash(:info, "Tweet deleted successfully.")

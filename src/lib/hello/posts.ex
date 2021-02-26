@@ -1,104 +1,46 @@
 defmodule Hello.Posts do
-  @moduledoc """
-  The Posts context.
-  """
-
-  import Ecto.Query, warn: false
+  import Ecto.Query
   alias Hello.Repo
 
   alias Hello.Posts.Tweet
 
   @doc """
-  Returns the list of tweets.
-
-  ## Examples
-
-      iex> list_tweets()
-      [%Tweet{}, ...]
-
+  Gets all tweets.
   """
-  def list_tweets do
-    Repo.all(Tweet)
+  @spec get_all_tweets :: Tweet.t() | {:error, String.t()}
+  def get_all_tweets do
+    Tweet
+    |> order_by([t], desc: t.inserted_at)
+    |> Repo.all()
+    |> Repo.preload(:user)
+  end
+
+  @spec get_tweet!(integer()) :: Tweet.t()
+  def get_tweet!(id) do
+    IO.inspect(id)
+
+    Tweet
+    |> Repo.get(id)
+    |> Repo.preload(:user)
+    |> IO.inspect()
   end
 
   @doc """
-  Gets a single tweet.
-
-  Raises `Ecto.NoResultsError` if the Tweet does not exist.
-
-  ## Examples
-
-      iex> get_tweet!(123)
-      %Tweet{}
-
-      iex> get_tweet!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_tweet!(id), do: Repo.get!(Tweet, id)
-
-  @doc """
   Creates a tweet.
-
-  ## Examples
-
-      iex> create_tweet(%{field: value})
-      {:ok, %Tweet{}}
-
-      iex> create_tweet(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
   """
-  def create_tweet(attrs \\ %{}) do
+  @spec create_tweet(map(), integer()) :: {:ok, Tweet.t()} | {:error, Ecto.Changeset.t()}
+  def create_tweet(tweet, user_id) do
     %Tweet{}
-    |> Tweet.changeset(attrs)
+    |> Tweet.changeset(tweet)
+    |> Ecto.Changeset.put_change(:user_id, user_id)
     |> Repo.insert()
   end
 
   @doc """
-  Updates a tweet.
-
-  ## Examples
-
-      iex> update_tweet(tweet, %{field: new_value})
-      {:ok, %Tweet{}}
-
-      iex> update_tweet(tweet, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_tweet(%Tweet{} = tweet, attrs) do
-    tweet
-    |> Tweet.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
   Deletes a tweet.
-
-  ## Examples
-
-      iex> delete_tweet(tweet)
-      {:ok, %Tweet{}}
-
-      iex> delete_tweet(tweet)
-      {:error, %Ecto.Changeset{}}
-
   """
+  @spec delete_tweet(Tweet.t()) :: {:ok, Tweet.t()} | {:error, Ecto.Changeset.t()}
   def delete_tweet(%Tweet{} = tweet) do
     Repo.delete(tweet)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking tweet changes.
-
-  ## Examples
-
-      iex> change_tweet(tweet)
-      %Ecto.Changeset{data: %Tweet{}}
-
-  """
-  def change_tweet(%Tweet{} = tweet, attrs \\ %{}) do
-    Tweet.changeset(tweet, attrs)
   end
 end

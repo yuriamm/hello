@@ -25,10 +25,24 @@ defmodule HelloWeb.RegistrationController do
         conn
         |> put_session(:current_user_id, user.id)
         |> put_flash(:info, "Successfully signed up!")
-        |> redirect(to: Routes.page_path(conn, :index))
+        |> redirect(to: Routes.tweet_path(conn, :index))
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "index.html", changeset: changeset)
+        errors =
+          Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
+            Enum.reduce(opts, msg, fn {key, value}, acc ->
+              String.replace(acc, "%{#{key}}", to_string(value))
+            end)
+          end)
+
+        error_message =
+          errors
+          |> Enum.map(fn {key, errors} -> "#{key}: #{Enum.join(errors, ", ")}" end)
+          |> Enum.join("\n")
+
+        conn
+        |> put_flash(:error, error_message)
+        |> render("index.html")
     end
   end
 end
