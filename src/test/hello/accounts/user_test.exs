@@ -1,4 +1,3 @@
-# TODO: write test for changeset
 defmodule Hello.Accounts.UserTest do
   use Hello.DataCase
 
