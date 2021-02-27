@@ -11,7 +11,12 @@ defmodule Hello.Posts.Tweet do
         }
   schema "tweets" do
     field :tweet, :string, size: @maximum_tweet_length
+
+    field :favorited, :boolean, virtual: true, default: false
+    field :favorites_count, :integer, virtual: true, default: 0
+
     belongs_to :user, Hello.Accounts.User, foreign_key: :user_id
+    has_many :favorites, Hello.Posts.Favorite, foreign_key: :user_id
 
     timestamps()
   end
