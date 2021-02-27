@@ -17,12 +17,8 @@ defmodule Hello.Posts do
 
   @spec get_tweet!(integer()) :: Tweet.t()
   def get_tweet!(id) do
-    IO.inspect(id)
-
     Tweet
     |> Repo.get(id)
-    |> Repo.preload(:user)
-    |> IO.inspect()
   end
 
   @doc """
@@ -31,8 +27,7 @@ defmodule Hello.Posts do
   @spec create_tweet(map(), integer()) :: {:ok, Tweet.t()} | {:error, Ecto.Changeset.t()}
   def create_tweet(tweet, user_id) do
     %Tweet{}
-    |> Tweet.changeset(tweet)
-    |> Ecto.Changeset.put_change(:user_id, user_id)
+    |> Tweet.changeset(tweet, user_id)
     |> Repo.insert()
   end
 

@@ -1,62 +1,59 @@
 defmodule Hello.PostsTest do
   use Hello.DataCase
 
+  alias Hello.Accounts
   alias Hello.Posts
+  alias Hello.Posts.Tweet
 
-  describe "tweets" do
-    alias Hello.Posts.Tweet
+  def user_fixture do
+    {:ok, user} =
+      Accounts.create_user(%{
+        password: "password",
+        password_confirmaton: "password",
+        username: "username"
+      })
 
-    @valid_attrs %{}
-    @update_attrs %{}
-    @invalid_attrs %{}
+    user
+  end
 
-    def tweet_fixture(attrs \\ %{}) do
-      {:ok, tweet} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Posts.create_tweet()
+  describe "get_all_tweets/0" do
+    test "returns all tweets" do
+      user = user_fixture()
 
-      tweet
+      {:ok, %Tweet{}} = Posts.create_tweet(%{"tweet" => "ddd"}, user.id)
+      tweets = Posts.get_all_tweets()
+      result = Enum.map(tweets, fn tweet -> tweet.tweet end)
+      assert result == ["ddd"]
     end
+  end
 
-    test "list_tweets/0 returns all tweets" do
-      tweet = tweet_fixture()
-      assert Posts.list_tweets() == [tweet]
-    end
+  describe "get_tweet!/1" do
+    test "returns the tweet with given id" do
+      user = user_fixture()
+      {:ok, tweet} = Posts.create_tweet(%{"tweet" => "ddd"}, user.id)
 
-    test "get_tweet!/1 returns the tweet with given id" do
-      tweet = tweet_fixture()
       assert Posts.get_tweet!(tweet.id) == tweet
     end
+  end
 
-    test "create_tweet/1 with valid data creates a tweet" do
-      assert {:ok, %Tweet{} = tweet} = Posts.create_tweet(@valid_attrs)
+  describe "create_tweet/2" do
+    test "with valid data creates a tweet" do
+      user = user_fixture()
+      assert {:ok, %Tweet{}} = Posts.create_tweet(%{"tweet" => "ddd"}, user.id)
     end
 
-    test "create_tweet/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Posts.create_tweet(@invalid_attrs)
+    test "with invalid data returns error changeset" do
+      user = user_fixture()
+      assert {:error, %Ecto.Changeset{}} = Posts.create_tweet(%{"tweet" => nil}, user.id)
     end
+  end
 
-    test "update_tweet/2 with valid data updates the tweet" do
-      tweet = tweet_fixture()
-      assert {:ok, %Tweet{} = tweet} = Posts.update_tweet(tweet, @update_attrs)
-    end
-
-    test "update_tweet/2 with invalid data returns error changeset" do
-      tweet = tweet_fixture()
-      assert {:error, %Ecto.Changeset{}} = Posts.update_tweet(tweet, @invalid_attrs)
-      assert tweet == Posts.get_tweet!(tweet.id)
-    end
-
-    test "delete_tweet/1 deletes the tweet" do
-      tweet = tweet_fixture()
+  describe "delete_tweet/1" do
+    test "deletes the tweet" do
+      user = user_fixture()
+      {:ok, tweet} = Posts.create_tweet(%{"tweet" => "ddd"}, user.id)
       assert {:ok, %Tweet{}} = Posts.delete_tweet(tweet)
-      assert_raise Ecto.NoResultsError, fn -> Posts.get_tweet!(tweet.id) end
-    end
-
-    test "change_tweet/1 returns a tweet changeset" do
-      tweet = tweet_fixture()
-      assert %Ecto.Changeset{} = Posts.change_tweet(tweet)
+      assert Posts.get_tweet!(tweet.id) == nil
     end
   end
 end

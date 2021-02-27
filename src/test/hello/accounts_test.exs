@@ -14,7 +14,7 @@ defmodule Hello.AccountsTest do
 
     test "creates a user with valid data" do
       assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
-      assert user.username = "username"
+      assert user.username == "username"
       assert Repo.get(User, user.id) != nil
     end
 

@@ -16,11 +16,12 @@ defmodule Hello.Posts.Tweet do
     timestamps()
   end
 
-  @spec changeset(map(), map()) :: Ecto.Changeset.t()
-  def changeset(%__MODULE__{} = tweet, params) do
+  @spec changeset(map(), map(), integer()) :: Ecto.Changeset.t()
+  def changeset(%__MODULE__{} = tweet, params, user_id) do
     tweet
     |> cast(params, [:tweet])
     |> validate_required([:tweet])
     |> validate_length(:tweet, min: @minimum_tweet_length, max: @maximum_tweet_length)
+    |> put_change(:user_id, user_id)
   end
 end
