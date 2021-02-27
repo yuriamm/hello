@@ -16,7 +16,7 @@
   </div>
    <%= if @user_id === tweet.user_id do %>
   <span>
-    <%= link "Delete", to: Routes.tweet_path(@conn, :delete, tweet), method: :delete, data: [confirm: "Are you sure?"] %>
+    <%= link "Delete", to: Routes.tweet_path(@conn, :delete, tweet.id), method: :delete, data: [confirm: "Are you sure?"] %>
   </span>
   <% end %>
 <% end %>

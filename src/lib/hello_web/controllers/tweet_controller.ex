@@ -54,8 +54,7 @@ defmodule HelloWeb.TweetController do
   """
   @spec delete(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def delete(conn, %{"id" => id}) do
-    tweet = Posts.get_tweet!(id)
-    {:ok, _} = Posts.delete_tweet(tweet)
+    {:ok, _} = Posts.delete_tweet(id)
 
     conn
     |> put_flash(:info, "Tweet deleted successfully.")

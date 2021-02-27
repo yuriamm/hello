@@ -18,18 +18,20 @@ defmodule HelloWeb.TweetControllerTest do
   end
 
   describe "index" do
-    test "lists all tweets", %{conn: conn} do
+    test "lists all tweets if logged in", %{conn: conn} do
       conn =
-        post(conn, Routes.session_path(conn, :create),
+        conn
+        |> post(Routes.session_path(conn, :create),
           session: %{username: "username", password: "password"}
         )
+        |> get(Routes.tweet_path(conn, :index))
 
-      conn = get(conn, Routes.tweet_path(conn, :index))
       assert html_response(conn, 200) =~ "tweet"
     end
 
-    test "lists all tweets even not logged in", %{conn: conn} do
+    test "lists all tweets if not logged in", %{conn: conn} do
       conn = get(conn, Routes.tweet_path(conn, :index))
+
       assert html_response(conn, 200) =~ "tweet"
     end
   end
@@ -37,30 +39,32 @@ defmodule HelloWeb.TweetControllerTest do
   describe "create tweet" do
     test "redirects to index when data is valid", %{conn: conn} do
       conn =
-        post(conn, Routes.session_path(conn, :create),
+        conn
+        |> post(Routes.session_path(conn, :create),
           session: %{username: "username", password: "password"}
         )
-
-      conn = post(conn, Routes.tweet_path(conn, :create), tweet: %{tweet: "valid_tweet"})
-      conn = get(conn, Routes.tweet_path(conn, :index))
+        |> post(Routes.tweet_path(conn, :create), tweet: %{tweet: "valid_tweet"})
+        |> get(Routes.tweet_path(conn, :index))
 
       assert html_response(conn, 200) =~ "valid_tweet"
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
       conn =
-        post(conn, Routes.session_path(conn, :create),
+        conn
+        |> post(Routes.session_path(conn, :create),
           session: %{username: "username", password: "password"}
         )
+        |> post(Routes.tweet_path(conn, :create), tweet: %{tweet: nil})
 
-      conn = post(conn, Routes.tweet_path(conn, :create), tweet: %{tweet: nil})
       assert get_flash(conn, :error) == "tweet: can't be blank"
+      assert html_response(conn, 200) =~ "tweet"
     end
   end
 
   describe "delete tweet" do
     test "deletes chosen tweet", %{conn: conn, tweet: tweet} do
-      conn = delete(conn, Routes.tweet_path(conn, :delete, tweet))
+      conn = delete(conn, Routes.tweet_path(conn, :delete, tweet.id))
 
       assert get_flash(conn, :info) == "Tweet deleted successfully."
     end

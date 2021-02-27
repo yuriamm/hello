@@ -20,8 +20,7 @@ defmodule Hello.Posts do
   """
   @spec get_tweet!(integer()) :: Tweet.t()
   def get_tweet!(id) do
-    Tweet
-    |> Repo.get(id)
+    Repo.get(Tweet, id)
   end
 
   @doc """
@@ -37,8 +36,10 @@ defmodule Hello.Posts do
   @doc """
   Deletes a tweet.
   """
-  @spec delete_tweet(Tweet.t()) :: {:ok, Tweet.t()} | {:error, Ecto.Changeset.t()}
-  def delete_tweet(%Tweet{} = tweet) do
-    Repo.delete(tweet)
+  @spec delete_tweet(integer()) :: {:ok, Tweet.t()} | {:error, Ecto.Changeset.t()}
+  def delete_tweet(id) do
+    Tweet
+    |> Repo.get_by!(id: id)
+    |> Repo.delete()
   end
 end

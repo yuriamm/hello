@@ -2,23 +2,18 @@ defmodule Hello.Posts.TweetTest do
   use Hello.DataCase
 
   import Ecto.Repo
+  import Hello.Factory
 
-  alias Hello.Accounts
   alias Hello.Posts.Tweet
 
   describe "changeset" do
     setup do
-      {:ok, user} =
-        Accounts.create_user(%{
-          password: "password",
-          password_confirmaton: "password",
-          username: "username"
-        })
+      user = insert(:user)
 
       {:ok, user: user}
     end
 
-    test "should insert data into tweets table when it has valid data", %{user: user} do
+    test "should be valid when input data is valid", %{user: user} do
       changeset = Tweet.changeset(%Tweet{}, %{tweet: "tweet"}, user.id)
 
       assert changeset.valid?
