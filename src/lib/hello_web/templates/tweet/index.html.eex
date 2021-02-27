@@ -1,14 +1,14 @@
 <h1>Listing Tweets</h1>
 <%= if Hello.Session.is_logged_in(@conn) do %>
-<%= form_for @conn, Routes.tweet_path(@conn, :create),[as: :tweet], fn f ->%>
-  <div>
-    <%= text_input f, :tweet %>
-    <%= error_tag f, :tweet %>
-  </div>
-  <div>
-    <%= submit "Tweet" %>
-  </div>
-<% end %>
+  <%= form_for @conn, Routes.tweet_path(@conn, :create),[as: :tweet], fn f ->%>
+    <div>
+      <%= text_input f, :tweet %>
+      <%= error_tag f, :tweet %>
+    </div>
+    <div>
+      <%= submit "Tweet" %>
+    </div>
+  <% end %>
 <% end %>
 <%= for tweet <- @tweets do %>
   <div>
