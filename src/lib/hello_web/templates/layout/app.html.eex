@@ -16,8 +16,8 @@
             <%= if Hello.Session.is_logged_in(@conn) do %>
               <li><%= link "Logout", to: Routes.session_path(@conn, :delete), method: :delete %></li>
             <% else %>
-            <li><%= link "Login", to: Routes.session_path(@conn, :index)%></li>
-            <li><%= link "Register", to: Routes.registration_path(@conn, :index)%></li>
+              <li><%= link "Login", to: Routes.session_path(@conn, :index)%></li>
+              <li><%= link "Register", to: Routes.registration_path(@conn, :index)%></li>
             <% end %>
           </ul>
         </nav>
