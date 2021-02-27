@@ -15,6 +15,9 @@ defmodule Hello.Posts do
     |> Repo.preload(:user)
   end
 
+  @doc """
+  Gets a single tweet by id.
+  """
   @spec get_tweet!(integer()) :: Tweet.t()
   def get_tweet!(id) do
     Tweet
