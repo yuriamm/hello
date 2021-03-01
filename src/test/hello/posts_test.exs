@@ -8,25 +8,22 @@ defmodule Hello.PostsTest do
   setup do
     user = insert(:user)
 
-    {:ok, tweet} =
-      %Tweet{}
-      |> Tweet.changeset(%{"tweet" => "ddd"}, user.id)
-      |> Repo.insert()
+    tweet = insert(:tweet)
 
     {:ok, user: user, tweet: tweet}
   end
 
   describe "get_all_tweets/0" do
-    test "returns all tweets" do
+    test "returns all tweets", %{tweet: tweet} do
       tweets = Posts.get_all_tweets()
       result = Enum.map(tweets, fn tweet -> tweet.tweet end)
-      assert result == ["ddd"]
+      assert result == [tweet.tweet]
     end
   end
 
   describe "get_tweet!/1" do
     test "returns the tweet with given id", %{tweet: tweet} do
-      assert Posts.get_tweet!(tweet.id) == tweet
+      assert Posts.get_tweet!(tweet.id).id == tweet.id
     end
   end
 
