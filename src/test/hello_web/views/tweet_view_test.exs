@@ -1,47 +1,36 @@
 defmodule HelloWeb.TweetViewTest do
   use HelloWeb.ConnCase, async: true
 
+  import Phoenix.View
+  import Hello.Factory
+
   describe "index" do
     test "shows tweet form if logged in", %{conn: conn} do
+      conn = init_test_session(conn, current_user_id: "1")
+      tweets = build_list(3, :tweet)
+
       content =
-        conn
-        |> post(Routes.registration_path(conn, :create), %{
-          user: %{
-            username: "username",
-            password: "password",
-            password_confirmation: "password"
-          }
-        })
-        |> get(Routes.tweet_path(conn, :index))
-        |> html_response(200)
+        render_to_string(HelloWeb.TweetView, "index.html",
+          conn: conn,
+          tweets: tweets,
+          user_id: 1
+        )
 
       assert content =~ "Tweet"
     end
 
-    test "shows delete if the user is logged in and is tweeted by the user", %{conn: conn} do
-      content =
-        conn
-        |> post(Routes.registration_path(conn, :create), %{
-          user: %{
-            username: "username",
-            password: "password",
-            password_confirmation: "password"
-          }
-        })
-        |> post(Routes.tweet_path(conn, :create), %{tweet: %{tweet: "tweet"}})
-        |> get(Routes.tweet_path(conn, :index))
-        |> html_response(200)
-
-      assert content =~ "delete"
-    end
-
     test "only shows tweets if not logged in", %{conn: conn} do
-      content =
-        conn
-        |> get(Routes.page_path(conn, :index))
-        |> html_response(200)
+      conn = init_test_session(conn, current_user_id: nil)
+      tweets = build_list(3, :tweet)
 
-      refute content =~ "Tweet"
+      content =
+        render_to_string(HelloWeb.TweetView, "index.html",
+          conn: conn,
+          tweets: tweets,
+          user_id: ""
+        )
+
+      refute content =~ "<button type=\"submit\">Tweet</button>"
       refute content =~ "delete"
     end
   end

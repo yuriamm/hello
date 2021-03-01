@@ -12,11 +12,11 @@
 <% end %>
 <%= for tweet <- @tweets do %>
   <div>
-  <%= tweet.tweet %>
+    <%= tweet.tweet %>
   </div>
-   <%= if @user_id === tweet.user_id do %>
-  <span>
-    <%= link "Delete", to: Routes.tweet_path(@conn, :delete, tweet.id), method: :delete, data: [confirm: "Are you sure?"] %>
-  </span>
+  <%= if @user_id === tweet.user_id do %>
+    <span>
+      <%= link "Delete", to: Routes.tweet_path(@conn, :delete, tweet.id), method: :delete, data: [confirm: "Are you sure?"] %>
+    </span>
   <% end %>
 <% end %>
