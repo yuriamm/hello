@@ -10,9 +10,9 @@ defmodule Hello.Posts do
   @spec get_all_tweets :: Tweet.t() | {:error, String.t()}
   def get_all_tweets do
     Tweet
+    |> preload(:user)
     |> order_by([t], desc: t.inserted_at)
     |> Repo.all()
-    |> Repo.preload(:user)
   end
 
   @doc """
@@ -20,7 +20,8 @@ defmodule Hello.Posts do
   """
   @spec get_tweet!(integer()) :: Tweet.t()
   def get_tweet!(id) do
-    Repo.get(Tweet, id)
+    Tweet
+    |> Repo.get(id)
     |> Repo.preload(:user)
   end
 

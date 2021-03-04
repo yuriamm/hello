@@ -9,7 +9,8 @@ defmodule Hello.Posts.Tweet do
 
   @type t() :: %__MODULE__{
           __meta__: Ecto.Schema.Metadata.t(),
-          tweet: String.t()
+          tweet: String.t(),
+          user: User.t()
         }
   schema "tweets" do
     field :tweet, :string, size: @maximum_tweet_length
@@ -21,9 +22,8 @@ defmodule Hello.Posts.Tweet do
   @spec changeset(map(), map(), integer()) :: Ecto.Changeset.t()
   def changeset(%__MODULE__{} = tweet, params, user_id) do
     tweet
-    |> cast(params, [:tweet])
-    |> validate_required([:tweet])
+    |> cast(params, [:tweet, :user_id])
+    |> validate_required([:tweet, :user_id])
     |> validate_length(:tweet, min: @minimum_tweet_length, max: @maximum_tweet_length)
-    |> put_change(:user_id, user_id)
   end
 end

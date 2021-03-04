@@ -31,15 +31,12 @@ defmodule HelloWeb.TweetController do
         |> redirect(to: Routes.tweet_path(conn, :index))
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        errors =
+        error_message =
           Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
             Enum.reduce(opts, msg, fn {key, value}, acc ->
               String.replace(acc, "%{#{key}}", to_string(value))
             end)
           end)
-
-        error_message =
-          errors
           |> Enum.map(fn {key, errors} -> "#{key}: #{Enum.join(errors, ", ")}" end)
           |> Enum.join("\n")
 
