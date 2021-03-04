@@ -21,8 +21,8 @@ defmodule Hello.Posts do
   @spec get_tweet!(integer()) :: Tweet.t()
   def get_tweet!(id) do
     Tweet
+    |> preload(:user)
     |> Repo.get(id)
-    |> Repo.preload(:user)
   end
 
   @doc """
