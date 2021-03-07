@@ -49,12 +49,17 @@ defmodule Hello.Posts do
   @doc """
   Gets favorites for a tweet.
   """
+  @spec get_favorite_by_tweet!(integer()) :: integer() | nil
   def get_favorite_by_tweet!(tweet_id) do
     query = from(f in Favorite, where: f.tweet_id == ^tweet_id, select: count(f.id))
 
     Repo.one(query)
   end
 
+  @doc """
+  Gets favorites by user id.
+  """
+  @spec get_favorite_by_user(integer(), integer()) :: boolean()
   def get_favorite_by_user(user_id, tweet_id) do
     query = from f in Favorite, where: f.user_id == ^user_id and f.tweet_id == ^tweet_id
     Repo.exists?(query)
@@ -63,9 +68,8 @@ defmodule Hello.Posts do
   @doc """
   Favorite a tweet.
   """
+  @spec favorite(map()) :: {:ok, Favorite.t()} | {:error, Ecto.Changeset.t()}
   def favorite(params) do
-    IO.inspect(params)
-
     %Favorite{}
     |> Favorite.changeset(params)
     |> Repo.insert()
@@ -74,10 +78,13 @@ defmodule Hello.Posts do
   @doc """
   Unfavorite a tweet.
   """
+  @spec unfavorite(integer(), integer()) :: {:ok, Favorite.t()} | {:error, Ecto.Changeset.t()}
   def unfavorite(tweet_id, user_id) do
     query =
       from f in Favorite,
         where: f.tweet_id == ^tweet_id and f.user_id == ^user_id
+
+    IO.inspect(Repo.one(query))
 
     Repo.one(query)
     |> Repo.delete()

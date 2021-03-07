@@ -2,14 +2,21 @@ defmodule Hello.Posts.Favorite do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Hello.Posts.Tweet
+  alias Hello.Accounts.User
+
+  @type t() :: %__MODULE__{
+          __meta__: Ecto.Schema.Metadata.t(),
+          tweet: Tweet.t(),
+          user: User.t()
+        }
   schema "favorites" do
-    belongs_to :user, Hello.Accounts.User
     belongs_to :tweet, Hello.Posts.Tweet
+    belongs_to :user, Hello.Accounts.User
 
     timestamps()
   end
 
-  @doc false
   def changeset(favorite, params) do
     favorite
     |> cast(params, [:user_id, :tweet_id])

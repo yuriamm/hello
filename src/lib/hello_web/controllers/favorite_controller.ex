@@ -1,8 +1,15 @@
 defmodule HelloWeb.FavoriteController do
+  @moduledoc """
+  This is favorite module. It handles favorite related functionality.
+  """
   use HelloWeb, :controller
 
   alias Hello.Posts
 
+  @doc """
+  Favorite tweets.
+  """
+  @spec create(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def create(conn, %{"tweet_id" => tweet_id}) do
     user_id = Plug.Conn.get_session(conn, :current_user_id)
 
@@ -30,22 +37,33 @@ defmodule HelloWeb.FavoriteController do
     end
   end
 
+  @doc """
+  Unfavorite tweets.
+  """
+  @spec delete(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def delete(conn, %{"id" => tweet_id}) do
     user_id = Plug.Conn.get_session(conn, :current_user_id)
 
+    IO.inspect(user_id)
+
     cond do
       !user_id ->
+        IO.inspect(label: 'youaa?')
+
         conn
         |> put_flash(:error, "You must login.")
         |> redirect(to: Routes.tweet_path(conn, :index))
 
       !Posts.get_favorite_by_user(user_id, tweet_id) ->
+        IO.inspect(label: 'a?')
+
         conn
         |> put_flash(:error, "Failed to unfavorite.")
         |> redirect(to: Routes.tweet_path(conn, :index))
 
       true ->
         Posts.unfavorite(tweet_id, user_id)
+        IO.inspect(label: 'you?')
 
         conn
         |> put_flash(:info, "Unfavorited successfully.")

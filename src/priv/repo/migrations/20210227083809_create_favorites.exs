@@ -8,7 +8,7 @@ defmodule Hello.Repo.Migrations.CreateFavorites do
 
       timestamps()
     end
-    create unique_index(:favorites, [:user_id, :tweet_id])
 
+    create unique_index(:favorites, [:user_id, :tweet_id])
   end
 end

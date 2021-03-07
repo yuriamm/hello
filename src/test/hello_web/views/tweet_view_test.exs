@@ -10,25 +10,29 @@ defmodule HelloWeb.TweetViewTest do
       tweets = build_list(3, :tweet)
 
       content =
-        render_to_string(HelloWeb.TweetView, "index.html",
-          conn: conn,
-          tweets: tweets,
-          user_id: 1
-        )
+        render_to_string(HelloWeb.TweetView, "index.html", conn: conn, tweets: tweets, user_id: 1)
 
       assert content =~ "Tweet"
     end
+
+    # TODO:
+    # test "shows favorite/unfavorite if logged in", %{conn: conn} do
+    #   conn = init_test_session(conn, current_user_id: "1")
+    #   favorites = build_list(3, :favorite)
+    #   tweets = Enum.map(favorites, fn favorite -> favorite.tweet end)
+
+    #   content =
+    #     render_to_string(HelloWeb.TweetView, "index.html", conn: conn, tweets: tweets, user_id: 1)
+
+    #   assert content =~ "Tweet"
+    # end
 
     test "only shows tweets if not logged in", %{conn: conn} do
       conn = init_test_session(conn, current_user_id: nil)
       tweets = build_list(3, :tweet)
 
       content =
-        render_to_string(HelloWeb.TweetView, "index.html",
-          conn: conn,
-          tweets: tweets,
-          user_id: ""
-        )
+        render_to_string(HelloWeb.TweetView, "index.html", conn: conn, tweets: tweets, user_id: "")
 
       refute content =~ "<button type=\"submit\">Tweet</button>"
       refute content =~ "delete"
