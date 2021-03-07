@@ -3,8 +3,8 @@ defmodule Hello.Repo.Migrations.CreateTweets do
 
   def change do
     create table(:tweets) do
-      add :tweet, :string, size: 140, null: false
-      add :user_id, references(:users, on_delete: :delete_all), null: false
+      add :tweet, :text, null: false
+      add :user_id, references(:users), null: false
 
       timestamps()
     end

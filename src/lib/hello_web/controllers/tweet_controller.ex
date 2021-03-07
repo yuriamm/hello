@@ -24,23 +24,21 @@ defmodule HelloWeb.TweetController do
   def create(conn, %{"tweet" => tweet_params}) do
     tweets = Posts.get_all_tweets()
     user_id = Plug.Conn.get_session(conn, :current_user_id)
+    params = Map.put(tweet_params, "user_id", user_id)
 
-    case Posts.create_tweet(tweet_params, user_id) do
+    case Posts.create_tweet(params) do
       {:ok, _} ->
         conn
         |> put_flash(:info, "Tweeted.")
         |> redirect(to: Routes.tweet_path(conn, :index))
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        errors =
+        error_message =
           Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
             Enum.reduce(opts, msg, fn {key, value}, acc ->
               String.replace(acc, "%{#{key}}", to_string(value))
             end)
           end)
-
-        error_message =
-          errors
           |> Enum.map(fn {key, errors} -> "#{key}: #{Enum.join(errors, ", ")}" end)
           |> Enum.join("\n")
 
@@ -55,11 +53,25 @@ defmodule HelloWeb.TweetController do
   """
   @spec delete(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def delete(conn, %{"id" => id}) do
-    tweet = Posts.get_tweet!(id)
-    {:ok, _} = Posts.delete_tweet(tweet)
+    user_id = Plug.Conn.get_session(conn, :current_user_id)
 
-    conn
-    |> put_flash(:info, "Tweet deleted successfully.")
-    |> redirect(to: Routes.tweet_path(conn, :index))
+    cond do
+      !user_id ->
+        conn
+        |> put_flash(:error, "You must login.")
+        |> redirect(to: Routes.tweet_path(conn, :index))
+
+      Posts.get_tweet!(id).user_id != user_id ->
+        conn
+        |> put_flash(:error, "Failed to delete tweet.")
+        |> redirect(to: Routes.tweet_path(conn, :index))
+
+      true ->
+        Posts.delete_tweet(id)
+
+        conn
+        |> put_flash(:info, "Tweet deleted successfully.")
+        |> redirect(to: Routes.tweet_path(conn, :index))
+    end
   end
 end

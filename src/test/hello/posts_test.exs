@@ -1,58 +1,46 @@
 defmodule Hello.PostsTest do
   use Hello.DataCase
+  import Hello.Factory
 
-  alias Hello.Accounts
   alias Hello.Posts
   alias Hello.Posts.Tweet
 
-  def user_fixture do
-    {:ok, user} =
-      Accounts.create_user(%{
-        password: "password",
-        password_confirmaton: "password",
-        username: "username"
-      })
+  setup do
+    user = insert(:user)
 
-    user
+    tweet = insert(:tweet)
+
+    {:ok, user: user, tweet: tweet}
   end
 
   describe "get_all_tweets/0" do
-    test "returns all tweets" do
-      user = user_fixture()
-
-      {:ok, %Tweet{}} = Posts.create_tweet(%{"tweet" => "ddd"}, user.id)
+    test "returns all tweets", %{tweet: tweet} do
       tweets = Posts.get_all_tweets()
       result = Enum.map(tweets, fn tweet -> tweet.tweet end)
-      assert result == ["ddd"]
+      assert result == [tweet.tweet]
     end
   end
 
   describe "get_tweet!/1" do
-    test "returns the tweet with given id" do
-      user = user_fixture()
-      {:ok, tweet} = Posts.create_tweet(%{"tweet" => "ddd"}, user.id)
-
-      assert Posts.get_tweet!(tweet.id) == tweet
+    test "returns the tweet with given id", %{tweet: tweet} do
+      assert Posts.get_tweet!(tweet.id).id == tweet.id
     end
   end
 
-  describe "create_tweet/2" do
-    test "with valid data creates a tweet" do
-      user = user_fixture()
-      assert {:ok, %Tweet{}} = Posts.create_tweet(%{"tweet" => "ddd"}, user.id)
+  describe "create_tweet/1" do
+    test "with valid data creates a tweet", %{user: user} do
+      assert {:ok, %Tweet{}} = Posts.create_tweet(%{"tweet" => "ddd", "user_id" => user.id})
     end
 
-    test "with invalid data returns error changeset" do
-      user = user_fixture()
-      assert {:error, %Ecto.Changeset{}} = Posts.create_tweet(%{"tweet" => nil}, user.id)
+    test "with invalid data returns error changeset", %{user: user} do
+      assert {:error, %Ecto.Changeset{}} =
+               Posts.create_tweet(%{"tweet" => nil, "user_id" => user.id})
     end
   end
 
   describe "delete_tweet/1" do
-    test "deletes the tweet" do
-      user = user_fixture()
-      {:ok, tweet} = Posts.create_tweet(%{"tweet" => "ddd"}, user.id)
-      assert {:ok, %Tweet{}} = Posts.delete_tweet(tweet)
+    test "deletes the tweet", %{tweet: tweet} do
+      assert {:ok, %Tweet{}} = Posts.delete_tweet(tweet.id)
       assert Posts.get_tweet!(tweet.id) == nil
     end
   end
