@@ -5,6 +5,7 @@ defmodule HelloWeb.TweetController do
   use HelloWeb, :controller
 
   alias Hello.Posts
+  alias Hello.Posts.Favorite
 
   @doc """
   Shows the home page.

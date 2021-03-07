@@ -40,16 +40,8 @@ defmodule Hello.Posts do
     Repo.delete(tweet)
   end
 
-  alias Hello.Posts.Favorite
-
   @doc """
-  Returns the list of favorites.
-  """
-  def list_favorites(tweet, user) do
-  end
-
-  @doc """
-  Gets a single favorite.
+  Gets favorites for a tweet.
   """
   def get_favorite!(tweet, user) do
     query = from(f in Favorite, where: f.tweet_id == ^tweet.id and f.user_id == ^user.id)
@@ -61,16 +53,16 @@ defmodule Hello.Posts do
   end
 
   @doc """
-  Creates a favorite.
+  Favorite a tweet.
   """
-  def favorite(params) do
+  def favorite(user, tweet) do
     %Favorite{}
-    |> Favorite.changeset(params)
+    |> Favorite.changeset(user, tweet)
     |> Repo.insert()
   end
 
   @doc """
-  Deletes a favorite.
+  Unfavorite a tweet.
   """
   def unfavorite(tweet, user) do
     Favorite
