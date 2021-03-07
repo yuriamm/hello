@@ -5,14 +5,14 @@ defmodule HelloWeb.FavoriteControllerTest do
   describe "logged in user" do
     setup %{conn: conn} do
       tweet = insert(:tweet)
-      favorite = insert(:favorite)
+      user = insert(:user)
 
       conn =
         post(conn, Routes.session_path(conn, :create),
-          session: %{username: favorite.tweet.user.username, password: "password"}
+          session: %{username: user.username, password: "password"}
         )
 
-      {:ok, conn: conn, tweet: tweet, favorite: favorite}
+      {:ok, conn: conn, tweet: tweet, user: user}
     end
 
     test "can favorite", %{conn: conn, tweet: tweet} do
@@ -22,12 +22,13 @@ defmodule HelloWeb.FavoriteControllerTest do
       assert html_response(conn, 302)
     end
 
-    # TODO:
-    # test "can unfavorite", %{conn: conn, favorite: favorite} do
-    #   conn = delete(conn, Routes.favorite_path(conn, :delete, favorite.tweet_id))
+    test "can unfavorite", %{conn: conn, user: user, tweet: tweet} do
+      insert(:favorite, user: user, tweet: tweet)
+      conn = delete(conn, Routes.favorite_path(conn, :delete, tweet.id))
 
-    #   assert get_flash(conn, :info) =~ "Unfavorited successfully."
-    # end
+      assert get_flash(conn, :info) =~ "Unfavorited successfully."
+      assert html_response(conn, 302)
+    end
   end
 
   describe "not logged in user" do
@@ -44,7 +45,7 @@ defmodule HelloWeb.FavoriteControllerTest do
       assert get_flash(conn, :error) =~ "user_id: can't be blank"
     end
 
-    test "can't unfavorite", %{conn: conn, tweet: tweet, favorite: favorite} do
+    test "can't unfavorite", %{conn: conn, favorite: favorite} do
       conn = delete(conn, Routes.tweet_path(conn, :delete, favorite.tweet_id))
 
       assert get_flash(conn, :error) =~ "You must login."

@@ -11,17 +11,15 @@ defmodule Hello.PostsTest do
 
     tweet = insert(:tweet)
 
-    favorite = insert(:favorite)
-
-    {:ok, user: user, tweet: tweet, favorite: favorite}
+    {:ok, user: user, tweet: tweet}
   end
 
   describe "get_all_tweets/0" do
-    test "returns all tweets", %{tweet: tweet, favorite: favorite} do
+    test "returns all tweets", %{tweet: tweet} do
       tweets = Posts.get_all_tweets()
       result = Enum.map(tweets, fn tweet -> tweet.tweet end)
 
-      assert Enum.all?(result, &(&1 in [tweet.tweet, favorite.tweet.tweet]))
+      assert Enum.all?(result, &(&1 in [tweet.tweet]))
     end
   end
 
@@ -50,18 +48,18 @@ defmodule Hello.PostsTest do
   end
 
   describe "get_favorite_by_tweet/1" do
-    test "returns number of favorites by tweet id", %{favorite: favorite} do
+    test "returns number of favorites by tweet id", %{user: user, tweet: tweet} do
+      favorite = insert(:favorite, user: user, tweet: tweet)
       assert Posts.get_favorite_by_tweet!(favorite.tweet.id) == 1
     end
   end
 
-  # TODO:
-  # describe "get_favorite_by_user/2" do
-  #   test "returns boolean for whether the user favorited the tweet", %{favorite: favorite} do
-  #     IO.inspect(favorite)
-  #     assert Posts.get_favorite_by_user(favorite.tweet.user_id, favorite.tweet_id) == true
-  #   end
-  # end
+  describe "get_favorite_by_user/2" do
+    test "returns boolean for whether the user favorited the tweet", %{user: user, tweet: tweet} do
+      insert(:favorite, user: user, tweet: tweet)
+      assert Posts.get_favorite_by_user(user.id, tweet.id) == true
+    end
+  end
 
   describe "favorite/1" do
     test "favorites a tweet", %{tweet: tweet} do
@@ -74,11 +72,11 @@ defmodule Hello.PostsTest do
     end
   end
 
-  # TODO:
-  # describe "unfavorite/2" do
-  #   test "deletes the favorite from a tweet", %{favorite: favorite} do
-  #     IO.inspect(Posts.unfavorite(favorite.tweet_id, favorite.tweet.user_id))
-  #     assert Posts.get_favorite_by_tweet!(favorite.tweet_id) == nil
-  #   end
-  # end
+  describe "unfavorite/2" do
+    test "deletes the favorite from a tweet", %{user: user, tweet: tweet} do
+      insert(:favorite, user: user, tweet: tweet)
+      assert {:ok, %Favorite{}} = Posts.unfavorite(tweet.id, user.id)
+      assert Posts.get_favorite_by_tweet!(tweet.id) == 0
+    end
+  end
 end

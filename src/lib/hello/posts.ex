@@ -84,8 +84,6 @@ defmodule Hello.Posts do
       from f in Favorite,
         where: f.tweet_id == ^tweet_id and f.user_id == ^user_id
 
-    IO.inspect(Repo.one(query))
-
     Repo.one(query)
     |> Repo.delete()
   end

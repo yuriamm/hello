@@ -5,9 +5,15 @@ defmodule HelloWeb.TweetViewTest do
   import Hello.Factory
 
   describe "index" do
-    test "shows tweet form if logged in", %{conn: conn} do
+    setup do
+      favorites = insert_list(3, :favorite)
+      tweets = Enum.map(favorites, fn favorite -> favorite.tweet end)
+
+      {:ok, tweets: tweets}
+    end
+
+    test "shows tweet form if logged in", %{conn: conn, tweets: tweets} do
       conn = init_test_session(conn, current_user_id: "1")
-      tweets = build_list(3, :tweet)
 
       content =
         render_to_string(HelloWeb.TweetView, "index.html", conn: conn, tweets: tweets, user_id: 1)
@@ -15,21 +21,17 @@ defmodule HelloWeb.TweetViewTest do
       assert content =~ "Tweet"
     end
 
-    # TODO:
-    # test "shows favorite/unfavorite if logged in", %{conn: conn} do
-    #   conn = init_test_session(conn, current_user_id: "1")
-    #   favorites = build_list(3, :favorite)
-    #   tweets = Enum.map(favorites, fn favorite -> favorite.tweet end)
+    test "shows favorite/unfavorite if logged in", %{conn: conn, tweets: tweets} do
+      conn = init_test_session(conn, current_user_id: "1")
 
-    #   content =
-    #     render_to_string(HelloWeb.TweetView, "index.html", conn: conn, tweets: tweets, user_id: 1)
+      content =
+        render_to_string(HelloWeb.TweetView, "index.html", conn: conn, tweets: tweets, user_id: 1)
 
-    #   assert content =~ "Tweet"
-    # end
+      assert content =~ "Tweet"
+    end
 
-    test "only shows tweets if not logged in", %{conn: conn} do
+    test "only shows tweets if not logged in", %{conn: conn, tweets: tweets} do
       conn = init_test_session(conn, current_user_id: nil)
-      tweets = build_list(3, :tweet)
 
       content =
         render_to_string(HelloWeb.TweetView, "index.html", conn: conn, tweets: tweets, user_id: "")
