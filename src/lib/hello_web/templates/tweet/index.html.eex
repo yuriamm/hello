@@ -13,8 +13,14 @@
 <%= for tweet <- @tweets do %>
   <div>
     <%= tweet.tweet %>
+    <span>favorited: <%= Hello.Posts.get_favorite_by_tweet!(tweet.id) %> </span>
   </div>
   <%= if @user_id === tweet.user_id do %>
+    <%= if Hello.Posts.get_favorite_by_user(@user_id, tweet.id) do %>
+        <%= link "Unfavorite", to: Routes.favorite_path(@conn, :delete, tweet.id), method: :delete %>
+    <% else %>
+        <%= link "Favorite", to: Routes.favorite_path(@conn, :create, tweet_id: tweet.id), method: :post %>
+    <% end %>
     <span>
       <%= link "Delete", to: Routes.tweet_path(@conn, :delete, tweet.id), method: :delete, data: [confirm: "Are you sure?"] %>
     </span>

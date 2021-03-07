@@ -49,30 +49,37 @@ defmodule Hello.Posts do
   @doc """
   Gets favorites for a tweet.
   """
-  def get_favorite!(tweet, user) do
-    query = from(f in Favorite, where: f.tweet_id == ^tweet.id and f.user_id == ^user.id)
+  def get_favorite_by_tweet!(tweet_id) do
+    query = from(f in Favorite, where: f.tweet_id == ^tweet_id, select: count(f.id))
 
-    case Repo.one(query) do
-      %Favorite{} -> Map.put(tweet, :favorited, true)
-      _ -> tweet
-    end
+    Repo.one(query)
+  end
+
+  def get_favorite_by_user(user_id, tweet_id) do
+    query = from f in Favorite, where: f.user_id == ^user_id and f.tweet_id == ^tweet_id
+    Repo.exists?(query)
   end
 
   @doc """
   Favorite a tweet.
   """
-  def favorite(user, tweet) do
+  def favorite(params) do
+    IO.inspect(params)
+
     %Favorite{}
-    |> Favorite.changeset(user, tweet)
+    |> Favorite.changeset(params)
     |> Repo.insert()
   end
 
   @doc """
   Unfavorite a tweet.
   """
-  def unfavorite(tweet, user) do
-    Favorite
-    |> Repo.get_by!(user_id: user.id, tweet_id: tweet.id)
+  def unfavorite(tweet_id, user_id) do
+    query =
+      from f in Favorite,
+        where: f.tweet_id == ^tweet_id and f.user_id == ^user_id
+
+    Repo.one(query)
     |> Repo.delete()
   end
 end

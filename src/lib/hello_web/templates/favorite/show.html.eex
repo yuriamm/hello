@@ -1,8 +1,0 @@
-<h1>Show Favorite</h1>
-
-<ul>
-
-</ul>
-
-<span><%= link "Edit", to: Routes.favorite_path(@conn, :edit, @favorite) %></span>
-<span><%= link "Back", to: Routes.favorite_path(@conn, :index) %></span>

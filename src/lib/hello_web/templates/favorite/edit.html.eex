@@ -1,5 +1,0 @@
-<h1>Edit Favorite</h1>
-
-<%= render "form.html", Map.put(assigns, :action, Routes.favorite_path(@conn, :update, @favorite)) %>
-
-<span><%= link "Back", to: Routes.favorite_path(@conn, :index) %></span>

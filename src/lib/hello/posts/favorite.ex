@@ -3,8 +3,8 @@ defmodule Hello.Posts.Favorite do
   import Ecto.Changeset
 
   schema "favorites" do
-    belongs_to :user, Hello.Accounts.User, foreign_key: :user_id
-    belongs_to :tweet, Hello.Posts.Tweet, foreign_key: :tweet_id
+    belongs_to :user, Hello.Accounts.User
+    belongs_to :tweet, Hello.Posts.Tweet
 
     timestamps()
   end
