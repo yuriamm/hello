@@ -28,10 +28,10 @@ defmodule Hello.Posts do
   @doc """
   Creates a tweet.
   """
-  @spec create_tweet(map(), integer()) :: {:ok, Tweet.t()} | {:error, Ecto.Changeset.t()}
-  def create_tweet(tweet, user_id) do
+  @spec create_tweet(map()) :: {:ok, Tweet.t()} | {:error, Ecto.Changeset.t()}
+  def create_tweet(tweet) do
     %Tweet{}
-    |> Tweet.changeset(tweet, user_id)
+    |> Tweet.changeset(tweet)
     |> Repo.insert()
   end
 

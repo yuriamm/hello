@@ -19,8 +19,8 @@ defmodule Hello.Posts.Tweet do
     timestamps()
   end
 
-  @spec changeset(map(), map(), integer()) :: Ecto.Changeset.t()
-  def changeset(%__MODULE__{} = tweet, params, user_id) do
+  @spec changeset(map(), map()) :: Ecto.Changeset.t()
+  def changeset(%__MODULE__{} = tweet, params) do
     tweet
     |> cast(params, [:tweet, :user_id])
     |> validate_required([:tweet, :user_id])

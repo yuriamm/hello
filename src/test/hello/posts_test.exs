@@ -27,13 +27,14 @@ defmodule Hello.PostsTest do
     end
   end
 
-  describe "create_tweet/2" do
+  describe "create_tweet/1" do
     test "with valid data creates a tweet", %{user: user} do
-      assert {:ok, %Tweet{}} = Posts.create_tweet(%{"tweet" => "ddd"}, user.id)
+      assert {:ok, %Tweet{}} = Posts.create_tweet(%{"tweet" => "ddd", "user_id" => user.id})
     end
 
     test "with invalid data returns error changeset", %{user: user} do
-      assert {:error, %Ecto.Changeset{}} = Posts.create_tweet(%{"tweet" => nil}, user.id)
+      assert {:error, %Ecto.Changeset{}} =
+               Posts.create_tweet(%{"tweet" => nil, "user_id" => user.id})
     end
   end
 
