@@ -24,6 +24,8 @@ defmodule HelloWeb.Router do
     post "/login", SessionController, :create
 
     delete "/logout", SessionController, :delete
+
+    resources "/home", TweetController, only: [:index, :create, :delete]
   end
 
   # Other scopes may use custom stacks.
