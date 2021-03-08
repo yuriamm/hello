@@ -19,6 +19,10 @@ defmodule Hello.Accounts.User do
     field(:password, :string, virtual: true)
     field(:password_confirmation, :string, virtual: true)
     field(:encrypted_password, :string)
+
+    has_many(:tweets, Hello.Posts.Tweet)
+    has_many(:favorites, Hello.Posts.Favorite)
+
     timestamps()
   end
 

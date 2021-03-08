@@ -3,6 +3,7 @@ defmodule Hello.Posts do
   alias Hello.Repo
 
   alias Hello.Posts.Tweet
+  alias Hello.Posts.Favorite
 
   @doc """
   Gets all tweets.
@@ -43,5 +44,46 @@ defmodule Hello.Posts do
     Tweet
     |> Repo.get_by!(id: id)
     |> Repo.delete()
+  end
+
+  @doc """
+  Gets favorites for a tweet.
+  """
+  @spec get_favorite_by_tweet!(integer()) :: non_neg_integer() | nil
+  def get_favorite_by_tweet!(tweet_id) do
+    Favorite
+    |> where(tweet_id: ^tweet_id)
+    |> select([t], count(t.id))
+    |> Repo.one()
+  end
+
+  @doc """
+  Gets favorites by user id.
+  """
+  @spec get_favorite_by_user(integer(), integer()) :: boolean()
+  def get_favorite_by_user(user_id, tweet_id) do
+    Favorite
+    |> where(user_id: ^user_id, tweet_id: ^tweet_id)
+    |> Repo.exists?()
+  end
+
+  @doc """
+  Favorite a tweet.
+  """
+  @spec favorite(map()) :: {:ok, Favorite.t()} | {:error, Ecto.Changeset.t()}
+  def favorite(params) do
+    %Favorite{}
+    |> Favorite.changeset(params)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Unfavorite a tweet.
+  """
+  @spec unfavorite(integer(), integer()) :: {:ok, Favorite.t()} | {:error, Ecto.Changeset.t()}
+  def unfavorite(tweet_id, user_id) do
+    Favorite
+    |> where([f], f.tweet_id == ^tweet_id and f.user_id == ^user_id)
+    |> Repo.delete_all()
   end
 end

@@ -3,6 +3,7 @@ defmodule Hello.Factory do
 
   alias Hello.Accounts.User
   alias Hello.Posts.Tweet
+  alias Hello.Posts.Favorite
 
   def user_factory do
     %User{
@@ -18,5 +19,25 @@ defmodule Hello.Factory do
       tweet: sequence(:tweet, &"Tweet #{&1}"),
       user: build(:user)
     }
+  end
+
+  def favorite_factory do
+    user = insert(:user)
+
+    %Favorite{
+      tweet: insert(:tweet, user: user),
+      user: user
+    }
+  end
+
+  def with_favorite(%User{} = user) do
+    tweet = insert(:tweet, user: user)
+    insert(:favorite, tweet: tweet, user: user)
+    user
+  end
+
+  def with_favorite(%Tweet{} = tweet) do
+    insert(:favorite, tweet: tweet, user: tweet.user)
+    tweet
   end
 end

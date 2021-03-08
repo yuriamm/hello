@@ -20,12 +20,12 @@ defmodule HelloWeb.Router do
 
     resources "/signup", RegistrationController, only: [:create, :index]
 
-    get "/login", SessionController, :index
-    post "/login", SessionController, :create
+    resources "/login", SessionController, only: [:index, :create]
 
     delete "/logout", SessionController, :delete
 
     resources "/home", TweetController, only: [:index, :create, :delete]
+    resources "/favorite", FavoriteController, only: [:create, :delete]
   end
 
   # Other scopes may use custom stacks.

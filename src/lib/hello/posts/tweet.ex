@@ -14,7 +14,9 @@ defmodule Hello.Posts.Tweet do
         }
   schema "tweets" do
     field :tweet, :string, size: @maximum_tweet_length
+
     belongs_to :user, User
+    has_many :favorites, Hello.Posts.Favorite
 
     timestamps()
   end
