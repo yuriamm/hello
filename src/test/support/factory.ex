@@ -22,8 +22,6 @@ defmodule Hello.Factory do
   end
 
   def favorite_factory do
-    user = build(:user)
-
     %Favorite{
       tweet: build(:tweet),
       user: build(:user)
