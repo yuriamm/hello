@@ -5,6 +5,12 @@ defmodule Hello.Posts.Favorite do
   alias Hello.Posts.Tweet
   alias Hello.Accounts.User
 
+  @typedoc """
+  A favorite post is chosen by a user.
+  ## Associations
+  user - the user that the like belongs to
+  posts - the post that received the like
+  """
   @type t() :: %__MODULE__{
           __meta__: Ecto.Schema.Metadata.t(),
           tweet: Tweet.t(),
