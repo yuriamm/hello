@@ -84,6 +84,6 @@ defmodule Hello.Posts do
   def unfavorite(tweet_id, user_id) do
     Favorite
     |> where([f], f.tweet_id == ^tweet_id and f.user_id == ^user_id)
-    |> Repo.delete()
+    |> Repo.delete_all()
   end
 end

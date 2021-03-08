@@ -22,9 +22,22 @@ defmodule Hello.Factory do
   end
 
   def favorite_factory do
+    user = insert(:user)
+
     %Favorite{
-      tweet: build(:tweet),
-      user: build(:user)
+      tweet: insert(:tweet, user: user),
+      user: user
     }
+  end
+
+  def with_favorite(%User{} = user) do
+    tweet = insert(:tweet, user: user)
+    insert(:favorite, tweet: tweet, user: user)
+    user
+  end
+
+  def with_favorite(%Tweet{} = tweet) do
+    insert(:favorite, tweet: tweet, user: tweet.user)
+    tweet
   end
 end
