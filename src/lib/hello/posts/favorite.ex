@@ -6,10 +6,7 @@ defmodule Hello.Posts.Favorite do
   alias Hello.Accounts.User
 
   @typedoc """
-  A favorite post is chosen by a user.
-  ## Associations
-  user - the user that the like belongs to
-  posts - the post that received the like
+  Type that represents the tweet struct and the user struct which the favorite belongs to.
   """
   @type t() :: %__MODULE__{
           __meta__: Ecto.Schema.Metadata.t(),
