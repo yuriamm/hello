@@ -7,29 +7,15 @@
     <title>Hello · Phoenix Framework</title>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <script defer type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+    <%= csrf_meta_tag() %>
   </head>
   <body>
-    <header>
-      <section class="container">
-        <nav role="navigation">
-          <ul>
-            <%= if Hello.Session.is_logged_in(@conn) do %>
-              <li><%= link "Logout", to: Routes.session_path(@conn, :delete), method: :delete %></li>
-            <% else %>
-              <li><%= link "Login", to: Routes.session_path(@conn, :index)%></li>
-              <li><%= link "Register", to: Routes.registration_path(@conn, :index)%></li>
-            <% end %>
-          </ul>
-        </nav>
-        <a href="<%= Routes.tweet_path(@conn, :index)%>" class="phx-logo">
-          <img src="<%= Routes.static_path(@conn, "/images/phoenix.png") %>" alt="Phoenix Framework Logo"/>
-        </a>
-      </section>
-    </header>
     <main role="main" class="container">
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
-      <%= @inner_content %>
+      <div id="app">
+        <%= @inner_content %>
+      </div>
     </main>
   </body>
 </html>

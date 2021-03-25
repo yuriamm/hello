@@ -11,6 +11,7 @@ defmodule Hello.Posts do
   @spec get_all_tweets :: Tweet.t() | {:error, String.t()}
   def get_all_tweets do
     Tweet
+    |> preload(:favorites)
     |> preload(:user)
     |> order_by([t], desc: t.inserted_at)
     |> Repo.all()
