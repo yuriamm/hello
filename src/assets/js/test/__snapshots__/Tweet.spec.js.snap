@@ -6,6 +6,13 @@ exports[`Tweet.vue renders correctly 1`] = `
    
   <!---->
    
+  <div>
+    <span>
+      
+    </span>
+     
+    <!---->
+  </div>
 </div>
 `;
 
@@ -34,5 +41,24 @@ exports[`Tweet.vue renders correctly when logged in 1`] = `
     </form>
   </div>
    
+  <div>
+    <span>
+      
+    </span>
+     
+    <div>
+      <button>
+        
+        Delete
+      
+      </button>
+       
+      <button>
+        
+        Favorite
+      
+      </button>
+    </div>
+  </div>
 </div>
 `;

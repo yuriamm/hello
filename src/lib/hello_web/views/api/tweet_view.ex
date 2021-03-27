@@ -18,9 +18,18 @@ defmodule HelloWeb.API.TweetView do
     }
   end
 
-  def render("success.json", _) do
+  def render("new.json", %{tweet: tweet}) do
     %{
-      message: "success"
+      message: "tweeted",
+      tweet: tweet.tweet,
+      id: tweet.id,
+      user_id: tweet.user_id
+    }
+  end
+
+  def render("delete.json", _) do
+    %{
+      message: "deleted"
     }
   end
 

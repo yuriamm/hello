@@ -25,8 +25,8 @@ defmodule HelloWeb.API.TweetController do
     params = Map.put(tweet_params, "user_id", user_id)
 
     case Posts.create_tweet(params) do
-      {:ok, _} ->
-        render(conn, "success.json")
+      {:ok, tweet} ->
+        render(conn, "new.json", tweet: tweet)
 
       {:error, %Ecto.Changeset{}} ->
         render(conn, "error.json")
@@ -41,8 +41,8 @@ defmodule HelloWeb.API.TweetController do
     user_id = Plug.Conn.get_session(conn, :current_user_id)
 
     case Posts.delete_tweet(id, user_id) do
-      {:ok, _} ->
-        render(conn, "success.json")
+      {:ok, tweet} ->
+        render(conn, "delete.json", tweet: tweet)
 
       {:error, _} ->
         render(conn, "error.json")

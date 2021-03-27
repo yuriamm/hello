@@ -9,18 +9,12 @@ defmodule HelloWeb.API.SessionController do
   @spec create(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def create(conn, %{"password" => password, "username" => username}) do
     case Session.login(%{password: password, username: username}) do
-      {:ok, user} ->
+      {:ok, %{id: id}} ->
         conn
-        |> put_session(:current_user_id, user.id)
-        |> render("success.json", user_id: user.id)
+        |> put_session(:current_user_id, id)
+        |> render("success.json", user_id: id)
 
-      {:error, "Error in verifying password."} ->
-        render(conn, "error.json")
-
-      {:error, "User doesn't exist."} ->
-        render(conn, "error.json")
-
-      {:error, "Username is empty."} ->
+      {:error, _} ->
         render(conn, "error.json")
     end
   end

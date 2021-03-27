@@ -7,12 +7,12 @@ defmodule HelloWeb.API.RegistrationController do
   alias Hello.Accounts
 
   @spec create(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def create(conn, user_params) do
-    case Accounts.create_user(user_params) do
-      {:ok, user} ->
+  def create(conn, params) do
+    case Accounts.create_user(params) do
+      {:ok, %{id: id}} ->
         conn
-        |> put_session(:current_user_id, user.id)
-        |> render("success.json", user_id: user.id)
+        |> put_session(:current_user_id, id)
+        |> render("success.json", user_id: id)
 
       {:error, %Ecto.Changeset{}} ->
         render(conn, "error.json")

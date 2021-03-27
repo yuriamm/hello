@@ -12,4 +12,11 @@ defmodule HelloWeb.API.FavoriteView do
       message: "error"
     }
   end
+
+  def render("favorite.json", %{tweet: tweet}) do
+    %{
+      message: "favorited",
+      id: tweet.id
+    }
+  end
 end

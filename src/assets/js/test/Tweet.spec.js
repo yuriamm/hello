@@ -50,7 +50,7 @@ describe("Tweet.vue", () => {
           users_favorited: [],
         },
       ],
-      user_id: "0",
+      user_id: 0,
       isLoggedIn: true,
     });
     const button = wrapper.findAll("button").at(1);
@@ -73,7 +73,7 @@ describe("Tweet.vue", () => {
           users_favorited: [0],
         },
       ],
-      user_id: "0",
+      user_id: 0,
       isLoggedIn: true,
     });
     const button = wrapper.findAll("button").at(1);
@@ -96,7 +96,7 @@ describe("Tweet.vue", () => {
           users_favorited: [1],
         },
       ],
-      user_id: "0",
+      user_id: 0,
       isLoggedIn: true,
     });
     const button = wrapper.findAll("button").at(1);

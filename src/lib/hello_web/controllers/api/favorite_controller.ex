@@ -17,8 +17,8 @@ defmodule HelloWeb.API.FavoriteController do
     params = %{user_id: user_id, tweet_id: tweet_id}
 
     case Posts.favorite(params) do
-      {:ok, _} ->
-        render(conn, "success.json")
+      {:ok, tweet} ->
+        render(conn, "favorite.json", tweet: tweet)
 
       {:error, %Ecto.Changeset{}} ->
         render(conn, "error.json")

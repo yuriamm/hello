@@ -10,16 +10,19 @@
         <button type="submit">Tweet</button>
       </form>
     </div>
-    <div v-for="tweet in tweets" :key="tweet.id">
+    <div v-for="(tweet, index) in tweets" :key="index">
       <span>{{ tweet.tweet }}</span>
       <div v-if="isLoggedIn">
         <button v-if="tweet.user_id === user_id" @click="remove(tweet.id)">
           Delete
         </button>
-        <button v-if="isFavorited(tweet)" @click="unfavorite(tweet.id)">
+        <button
+          v-if="tweet.users_favorited.includes(user_id)"
+          @click="unfavorite(tweet.id, index)"
+        >
           Unfavorite
         </button>
-        <button v-else @click="favorite(tweet.id)">
+        <button v-else @click="favorite(tweet.id, index)">
           Favorite
         </button>
       </div>
@@ -37,7 +40,14 @@ export default {
   },
   data() {
     return {
-      tweets: [],
+      tweets: [
+        {
+          tweet: "",
+          id: 0,
+          user_id: 0,
+          users_favorited: []
+        }
+      ],
       post: "",
       user_id: 0,
       error: false,
@@ -57,18 +67,11 @@ export default {
     this.tweets = response.data.tweets;
   },
   methods: {
-    isFavorited(tweet) {
-      if (tweet.users_favorited) {
-        return tweet.users_favorited.includes(this.user_id);
-      } else {
-        return false;
-      }
-    },
     async tweet() {
       const response = await request("/api/home", { tweet: this.post }, "post");
-      if (response.data.message === "success") {
+      if (response.data.message === "tweeted") {
         this.tweets = [response.data, ...this.tweets];
-        window.location.href = "/home";
+        this.post = "";
         this.success = true;
       }
       if (response.data.message === "error") {
@@ -77,28 +80,30 @@ export default {
     },
     async remove(id) {
       const response = await request(`/api/home/${id}`, {}, "delete");
-      if (response.data.message === "success") {
-        window.location.href = "/home";
+      if (response.data.message === "deleted") {
+        this.tweets = this.tweets.filter(tweet => tweet.id !== id);
         this.success = true;
       }
       if (response.data.message === "error") {
         this.error = true;
       }
     },
-    async favorite(id) {
+    async favorite(id, index) {
       const response = await request(`/api/favorite`, { id: id }, "post");
-      if (response.data.message === "success") {
-        window.location.href = "/home";
+      if (response.data.message === "favorited") {
+        this.tweets[index].users_favorited.push(this.user_id);
         this.success = true;
       }
       if (response.data.message === "error") {
         this.error = true;
       }
     },
-    async unfavorite(id) {
+    async unfavorite(id, index) {
       const response = await request(`/api/favorite/${id}`, {}, "delete");
       if (response.data.message === "success") {
-        window.location.href = "/home";
+        this.tweets[index].users_favorited = this.tweets[
+          index
+        ].users_favorited.filter(user_id => user_id !== this.user_id);
         this.success = true;
       }
       if (response.data.message === "error") {
