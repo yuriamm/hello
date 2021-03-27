@@ -12,11 +12,11 @@ Object.defineProperty(window, "location", {
 const wrapper = shallowMount(NavBar);
 
 describe("NavBar.vue", () => {
-  it("matches the snapshot", async () => {
+  it("snapshot macthes", async () => {
     expect(wrapper.element).toMatchSnapshot();
   });
 
-  it("matches the snapshot when is logged in", async () => {
+  it("snapshot macthes when logged in", async () => {
     await wrapper.setProps({ isLoggedIn: true });
 
     expect(wrapper.element).toMatchSnapshot();

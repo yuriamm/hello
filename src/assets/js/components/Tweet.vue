@@ -7,7 +7,7 @@
       <form @submit.prevent="tweet">
         <input v-model="post" type="text" required />
 
-        <button type="submit">Submit</button>
+        <button type="submit">Tweet</button>
       </form>
     </div>
     <div v-for="tweet in tweets" :key="tweet.id">

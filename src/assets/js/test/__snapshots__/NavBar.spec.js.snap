@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`NavBar.vue matches the snapshot 1`] = `
+exports[`NavBar.vue snapshot macthes 1`] = `
 <div>
   <div
     id="nav"
@@ -30,7 +30,7 @@ exports[`NavBar.vue matches the snapshot 1`] = `
 </div>
 `;
 
-exports[`NavBar.vue matches the snapshot when is logged in 1`] = `
+exports[`NavBar.vue snapshot macthes when logged in 1`] = `
 <div>
   <div
     id="nav"
