@@ -13,10 +13,7 @@
     <div v-for="tweet in tweets" :key="tweet.id">
       <span>{{ tweet.tweet }}</span>
       <div v-if="isLoggedIn">
-        <button
-          v-if="tweet.user_id === parseInt(user_id)"
-          @click="remove(tweet.id)"
-        >
+        <button v-if="tweet.user_id === user_id" @click="remove(tweet.id)">
           Delete
         </button>
         <button v-if="isFavorited(tweet)" @click="unfavorite(tweet.id)">
@@ -49,7 +46,7 @@ export default {
     };
   },
   async created() {
-    const user_id = sessionStorage.getItem("user_id");
+    const user_id = JSON.parse(sessionStorage.getItem("user_id"));
     if (user_id) {
       this.isLoggedIn = true;
       this.user_id = user_id;
@@ -61,7 +58,11 @@ export default {
   },
   methods: {
     isFavorited(tweet) {
-      return tweet.users_favorited.includes(parseInt(this.user_id));
+      if (tweet.users_favorited) {
+        return tweet.users_favorited.includes(this.user_id);
+      } else {
+        return false;
+      }
     },
     async tweet() {
       const response = await request("/api/home", { tweet: this.post }, "post");

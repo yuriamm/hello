@@ -21,7 +21,6 @@ defmodule HelloWeb.API.TweetController do
   """
   @spec create(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def create(conn, tweet_params) do
-    # tweets = Posts.get_all_tweets()
     user_id = Plug.Conn.get_session(conn, :current_user_id)
     params = Map.put(tweet_params, "user_id", user_id)
 
@@ -41,16 +40,12 @@ defmodule HelloWeb.API.TweetController do
   def delete(conn, %{"id" => id}) do
     user_id = Plug.Conn.get_session(conn, :current_user_id)
 
-    cond do
-      !user_id ->
-        render(conn, "error.json")
-
-      Posts.get_tweet!(id).user_id != user_id ->
-        render(conn, "error.json")
-
-      true ->
-        Posts.delete_tweet(id)
+    case Posts.delete_tweet(id, user_id) do
+      {:ok, _} ->
         render(conn, "success.json")
+
+      {:error, _} ->
+        render(conn, "error.json")
     end
   end
 end

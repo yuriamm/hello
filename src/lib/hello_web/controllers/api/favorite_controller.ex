@@ -32,16 +32,12 @@ defmodule HelloWeb.API.FavoriteController do
   def delete(conn, %{"id" => tweet_id}) do
     user_id = Plug.Conn.get_session(conn, :current_user_id)
 
-    cond do
-      !user_id ->
-        render(conn, "error.json")
-
-      !Posts.get_favorite_by_user(user_id, tweet_id) ->
-        render(conn, "error.json")
-
-      true ->
-        Posts.unfavorite(tweet_id, user_id)
+    case Posts.unfavorite(tweet_id, user_id) do
+      {1, nil} ->
         render(conn, "success.json")
+
+      _ ->
+        render(conn, "error.json")
     end
   end
 end

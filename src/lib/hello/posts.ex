@@ -40,10 +40,11 @@ defmodule Hello.Posts do
   @doc """
   Deletes a tweet.
   """
-  @spec delete_tweet(integer()) :: {:ok, Tweet.t()} | {:error, Ecto.Changeset.t()}
-  def delete_tweet(id) do
+  @spec delete_tweet(integer(), integer() | nil) ::
+          {:ok, Tweet.t()} | {:error, Ecto.Changeset.t()}
+  def delete_tweet(id, user_id) do
     Tweet
-    |> Repo.get_by!(id: id)
+    |> Repo.get_by!(id: id, user_id: user_id)
     |> Repo.delete()
   end
 
@@ -81,7 +82,8 @@ defmodule Hello.Posts do
   @doc """
   Unfavorite a tweet.
   """
-  @spec unfavorite(integer(), integer()) :: {:ok, Favorite.t()} | {:error, Ecto.Changeset.t()}
+  @spec unfavorite(integer(), integer() | nil) ::
+          {integer(), nil | [term()]}
   def unfavorite(tweet_id, user_id) do
     Favorite
     |> where([f], f.tweet_id == ^tweet_id and f.user_id == ^user_id)
