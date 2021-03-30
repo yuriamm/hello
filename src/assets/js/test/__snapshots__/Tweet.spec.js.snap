@@ -1,0 +1,72 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Tweet.vue renders correctly 1`] = `
+<div>
+  <navbar-stub />
+   
+  <!---->
+   
+  <div>
+    <span>
+      
+    </span>
+     
+    <span>
+      favorited: 0
+    </span>
+     
+    <!---->
+  </div>
+</div>
+`;
+
+exports[`Tweet.vue renders correctly when logged in 1`] = `
+<div>
+  <navbar-stub
+    isloggedin="true"
+  />
+   
+  <div>
+    <!---->
+     
+    <!---->
+     
+    <form>
+      <input
+        required="required"
+        type="text"
+      />
+       
+      <button
+        type="submit"
+      >
+        Tweet
+      </button>
+    </form>
+  </div>
+   
+  <div>
+    <span>
+      
+    </span>
+     
+    <span>
+      favorited: 0
+    </span>
+     
+    <div>
+      <button>
+        
+        Delete
+      
+      </button>
+       
+      <button>
+        
+        Favorite
+      
+      </button>
+    </div>
+  </div>
+</div>
+`;

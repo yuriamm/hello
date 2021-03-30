@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Session.vue renders correctly when error 1`] = `
+<div>
+  <navbar-stub
+    isloggedin="true"
+  />
+   
+  <div>
+    You're Logged In!
+  </div>
+</div>
+`;
+
+exports[`Session.vue snapshot matches 1`] = `
+<div>
+  <navbar-stub />
+   
+  <div>
+    <h1>
+      Login
+    </h1>
+     
+    <!---->
+     
+    <form>
+      <input
+        placeholder="username"
+        required="required"
+        type="text"
+      />
+       
+      <input
+        placeholder="password"
+        required="required"
+        type="password"
+      />
+       
+      <button
+        type="submit"
+      >
+        Submit
+      </button>
+    </form>
+  </div>
+</div>
+`;
+
+exports[`Session.vue snapshot matches when logged in 1`] = `
+<div>
+  <navbar-stub
+    isloggedin="true"
+  />
+   
+  <div>
+    You're Logged In!
+  </div>
+</div>
+`;

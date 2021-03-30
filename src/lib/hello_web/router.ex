@@ -11,20 +11,30 @@ defmodule HelloWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_session
   end
 
   scope "/", HelloWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    resources "/signup", RegistrationController, only: [:index]
 
-    resources "/signup", RegistrationController, only: [:create, :index]
+    resources "/login", SessionController, only: [:index]
 
-    resources "/login", SessionController, only: [:index, :create]
+    resources "/home", TweetController, only: [:index]
+  end
+
+  scope "/api", HelloWeb.API do
+    pipe_through :api
+
+    resources("/login", SessionController, only: [:create])
+
+    resources("/signup", RegistrationController, only: [:create])
 
     delete "/logout", SessionController, :delete
 
     resources "/home", TweetController, only: [:index, :create, :delete]
+
     resources "/favorite", FavoriteController, only: [:create, :delete]
   end
 
