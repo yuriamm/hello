@@ -2,6 +2,7 @@ defmodule HelloWeb.API.TweetView do
   use HelloWeb, :view
 
   alias HelloWeb.API.TweetView
+  alias Hello.Posts
 
   def render("index.json", %{tweets: tweets}) do
     %{
@@ -14,7 +15,8 @@ defmodule HelloWeb.API.TweetView do
       id: tweet.id,
       tweet: tweet.tweet,
       user_id: tweet.user_id,
-      users_favorited: Enum.map(tweet.favorites, fn favorite -> favorite.user_id end)
+      users_favorited: Enum.map(tweet.favorites, fn favorite -> favorite.user_id end),
+      favorited_count: Posts.get_favorite_by_tweet!(tweet.id)
     }
   end
 

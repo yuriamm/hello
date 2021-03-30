@@ -24,8 +24,8 @@ export default {
     }
   },
   methods: {
-    logout() {
-      request("/api/logout", {}, "delete");
+    async logout() {
+      await request("/api/logout", {}, "delete");
       sessionStorage.removeItem("user_id");
       window.location.href = "/login";
     }

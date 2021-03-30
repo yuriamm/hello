@@ -4,7 +4,7 @@
     <div v-if="isLoggedIn">
       <div class="alert alert-danger" v-if="error">Error!</div>
       <div class="alert alert-success" v-if="success">Success!</div>
-      <form @submit.prevent="tweet">
+      <form @submit.prevent="postTweet">
         <input v-model="post" type="text" required />
 
         <button type="submit">Tweet</button>
@@ -12,8 +12,9 @@
     </div>
     <div v-for="(tweet, index) in tweets" :key="index">
       <span>{{ tweet.tweet }}</span>
+      <span>favorited: {{ tweet.favorited_count }}</span>
       <div v-if="isLoggedIn">
-        <button v-if="tweet.user_id === user_id" @click="remove(tweet.id)">
+        <button v-if="tweet.user_id === user_id" @click="deleteTweet(tweet.id)">
           Delete
         </button>
         <button
@@ -45,7 +46,8 @@ export default {
           tweet: "",
           id: 0,
           user_id: 0,
-          users_favorited: []
+          users_favorited: [],
+          favorited_count: 0
         }
       ],
       post: "",
@@ -67,7 +69,7 @@ export default {
     this.tweets = response.data.tweets;
   },
   methods: {
-    async tweet() {
+    async postTweet() {
       const response = await request("/api/home", { tweet: this.post }, "post");
       if (response.data.message === "tweeted") {
         this.tweets = [response.data, ...this.tweets];
@@ -78,7 +80,7 @@ export default {
         this.error = true;
       }
     },
-    async remove(id) {
+    async deleteTweet(id) {
       const response = await request(`/api/home/${id}`, {}, "delete");
       if (response.data.message === "deleted") {
         this.tweets = this.tweets.filter(tweet => tweet.id !== id);
@@ -92,6 +94,8 @@ export default {
       const response = await request(`/api/favorite`, { id: id }, "post");
       if (response.data.message === "favorited") {
         this.tweets[index].users_favorited.push(this.user_id);
+        this.tweets[index].favorited_count =
+          this.tweets[index].favorited_count + 1;
         this.success = true;
       }
       if (response.data.message === "error") {
@@ -104,6 +108,8 @@ export default {
         this.tweets[index].users_favorited = this.tweets[
           index
         ].users_favorited.filter(user_id => user_id !== this.user_id);
+        this.tweets[index].favorited_count =
+          this.tweets[index].favorited_count - 1;
         this.success = true;
       }
       if (response.data.message === "error") {
