@@ -33,10 +33,8 @@ describe("Session.vue", () => {
       },
     });
     wrapper.find("form").trigger("submit.prevent");
-    wrapper.vm.$nextTick(() => {
-      expect(window.location.href).toEqual("/home");
-      done();
-    });
+    await wrapper.vm.$nextTick();
+    expect(window.location.href).toEqual("/home");
   });
 
   it("raises error when username is empty", async () => {
@@ -49,9 +47,7 @@ describe("Session.vue", () => {
       },
     });
     wrapper.find("form").trigger("submit.prevent");
-    await wrapper.vm.$nextTick(() => {
-      expect(wrapper.vm.error).toEqual(true);
-      done();
-    });
+    await wrapper.vm.$nextTick();
+    expect(wrapper.vm.error).toBeTruthy();
   });
 });

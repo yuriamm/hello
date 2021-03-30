@@ -34,10 +34,8 @@ describe("Tweet.vue", () => {
     expect(button.text()).toEqual("Tweet");
 
     wrapper.find("form").trigger("submit.prevent");
-    wrapper.vm.$nextTick(() => {
-      expect(window.location.href).toEqual("/home");
-      done();
-    });
+    await wrapper.vm.$nextTick();
+    expect(window.location.href).toEqual("/home");
   });
 
   it("redirects to correct path when delete", async () => {
@@ -57,10 +55,8 @@ describe("Tweet.vue", () => {
     expect(button.text()).toEqual("Delete");
 
     button.trigger("click");
-    wrapper.vm.$nextTick(() => {
-      expect(window.location.href).toEqual("/home");
-      done();
-    });
+    await wrapper.vm.$nextTick();
+    expect(window.location.href).toEqual("/home");
   });
 
   it("redirects to correct path when unfavorite", async () => {
@@ -80,10 +76,8 @@ describe("Tweet.vue", () => {
     expect(button.text()).toEqual("Unfavorite");
 
     button.trigger("click");
-    wrapper.vm.$nextTick(() => {
-      expect(window.location.href).toEqual("/home");
-      done();
-    });
+    await wrapper.vm.$nextTick();
+    expect(window.location.href).toEqual("/home");
   });
 
   it("redirects to correct path when favorite", async () => {
@@ -103,10 +97,8 @@ describe("Tweet.vue", () => {
     expect(button.text()).toEqual("Favorite");
 
     button.trigger("click");
-    wrapper.vm.$nextTick(() => {
-      expect(window.location.href).toEqual("/home");
-      done();
-    });
+    await wrapper.vm.$nextTick();
+    expect(window.location.href).toEqual("/home");
   });
 
   it("raises error when post is empty", async () => {
@@ -118,9 +110,7 @@ describe("Tweet.vue", () => {
     expect(button.text()).toEqual("Tweet");
 
     wrapper.find("form").trigger("submit.prevent");
-    wrapper.vm.$nextTick(() => {
-      expect(wrapper.vm.error).toEqual(true);
-      done();
-    });
+    await wrapper.vm.$nextTick();
+    expect(wrapper.vm.error).toBeTruthy();
   });
 });
