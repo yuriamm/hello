@@ -38,4 +38,20 @@ describe("Session.vue", () => {
       done();
     });
   });
+
+  it("raises error when username is empty", async () => {
+    await wrapper.setData({
+      isLoggedIn: false,
+      user: {
+        username: "",
+        password: "password",
+        password_confirmation: "password",
+      },
+    });
+    wrapper.find("form").trigger("submit.prevent");
+    await wrapper.vm.$nextTick(() => {
+      expect(wrapper.vm.error).toEqual(true);
+      done();
+    });
+  });
 });

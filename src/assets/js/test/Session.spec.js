@@ -37,4 +37,19 @@ describe("Session.vue", () => {
       done();
     });
   });
+
+  it("raises error when password is empty", async () => {
+    await wrapper.setData({
+      isLoggedIn: false,
+      user: {
+        username: "username",
+        password: "",
+      },
+    });
+    wrapper.find("form").trigger("submit.prevent");
+    await wrapper.vm.$nextTick(() => {
+      expect(wrapper.vm.error).toEqual(true);
+      done();
+    });
+  });
 });

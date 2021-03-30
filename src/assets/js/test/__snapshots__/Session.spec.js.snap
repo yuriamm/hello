@@ -1,5 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Session.vue renders correctly when error 1`] = `
+<div>
+  <navbar-stub
+    isloggedin="true"
+  />
+   
+  <div>
+    You're Logged In!
+  </div>
+</div>
+`;
+
 exports[`Session.vue snapshot matches 1`] = `
 <div>
   <navbar-stub />

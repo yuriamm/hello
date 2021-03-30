@@ -108,4 +108,19 @@ describe("Tweet.vue", () => {
       done();
     });
   });
+
+  it("raises error when post is empty", async () => {
+    await wrapper.setData({
+      post: "",
+      isLoggedIn: true,
+    });
+    const button = wrapper.findAll("button").at(0);
+    expect(button.text()).toEqual("Tweet");
+
+    wrapper.find("form").trigger("submit.prevent");
+    wrapper.vm.$nextTick(() => {
+      expect(wrapper.vm.error).toEqual(true);
+      done();
+    });
+  });
 });

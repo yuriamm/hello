@@ -25,7 +25,9 @@ defmodule HelloWeb.API.TweetView do
       message: "tweeted",
       tweet: tweet.tweet,
       id: tweet.id,
-      user_id: tweet.user_id
+      user_id: tweet.user_id,
+      users_favorited: [],
+      favorited_count: 0
     }
   end
 

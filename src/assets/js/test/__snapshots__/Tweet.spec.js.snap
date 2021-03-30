@@ -11,6 +11,10 @@ exports[`Tweet.vue renders correctly 1`] = `
       
     </span>
      
+    <span>
+      favorited: 0
+    </span>
+     
     <!---->
   </div>
 </div>
@@ -44,6 +48,10 @@ exports[`Tweet.vue renders correctly when logged in 1`] = `
   <div>
     <span>
       
+    </span>
+     
+    <span>
+      favorited: 0
     </span>
      
     <div>
